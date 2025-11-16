@@ -1,20 +1,20 @@
 {
-  "name": "lrg-inc",
+  "name": "liberia-renaissance-group-lrg-",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liberiarenaissancegroup-LRG/Liberia-Renaissance-Group-LRG-.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JBCDESING/-Liberia-Renaissance-Group-LRG-Inc.-.git"
-  },
   "bugs": {
-    "url": "https://github.com/JBCDESING/-Liberia-Renaissance-Group-LRG-Inc.-/issues"
+    "url": "https://github.com/liberiarenaissancegroup-LRG/Liberia-Renaissance-Group-LRG-/issues"
   },
-  "homepage": "https://github.com/JBCDESING/-Liberia-Renaissance-Group-LRG-Inc.-#readme"
+  "homepage": "https://github.com/liberiarenaissancegroup-LRG/Liberia-Renaissance-Group-LRG-#readme"
 }
