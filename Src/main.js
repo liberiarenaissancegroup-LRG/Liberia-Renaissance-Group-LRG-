@@ -174,7 +174,69 @@
 
         // Setup listeners
         initEventListeners();
+        // Initialize WhatsApp FAB behavior
+        initWhatsAppFAB();
     });
+
+    /* WhatsApp FAB implementation: builds wa.me link from data-phone, handles dismiss persistence and click analytics */
+    function initWhatsAppFAB() {
+        const fab = document.getElementById('whatsapp-fab');
+        if (!fab) return;
+
+        const phone = (fab.getAttribute('data-phone') || '').trim();
+        const link = document.getElementById('whatsapp-link');
+        const closeBtn = document.getElementById('whatsapp-close');
+
+        // If user dismissed previously, don't show
+        try {
+            const dismissed = window.localStorage && localStorage.getItem('whatsappFabDismissed');
+            if (dismissed === '1') {
+                fab.style.display = 'none';
+                return;
+            }
+        } catch (err) {
+            // ignore storage errors
+        }
+
+        // Build the wa.me href if phone provided
+        if (phone && phone !== 'XXXXXXXXXX') {
+            const href = `https://wa.me/${encodeURIComponent(phone)}`;
+            if (link) link.setAttribute('href', href);
+        } else {
+            // Leave href as '#' if placeholder, but still allow copy or manual replace
+            if (link) link.setAttribute('href', '#');
+            console.warn('WhatsApp FAB: please set a phone number in the data-phone attribute of #whatsapp-fab');
+        }
+
+        // Track clicks (analytics stub) and allow default navigation
+        if (link) {
+            link.addEventListener('click', (e) => {
+                // If no phone configured, prevent navigation
+                if (!phone || phone === 'XXXXXXXXXX') {
+                    e.preventDefault();
+                    showMessage('WhatsApp contact is not configured yet.');
+                    return;
+                }
+
+                // Analytics stub — replace with real analytics call if needed
+                try {
+                    // Example: window.dataLayer && window.dataLayer.push({ event: 'whatsapp_click' });
+                    console.log('WhatsApp FAB clicked — opening', `https://wa.me/${phone}`);
+                } catch (err) {
+                    // ignore
+                }
+            });
+        }
+
+        // Close/dismiss button
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                try { if (window.localStorage) localStorage.setItem('whatsappFabDismissed', '1'); } catch (err) {}
+                fab.style.display = 'none';
+            });
+        }
+    }
 
     // Expose helpers to global scope for inline calls (e.g., form onsubmit)
     window.showPage = showPage;
