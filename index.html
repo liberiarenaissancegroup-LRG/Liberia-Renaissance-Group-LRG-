@@ -4,7 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liberia Renaissance Group (LRG Inc.)</title>
-    <!-- Load Tailwind CSS -->
+    <!-- Tailwind configuration (declare before the CDN to apply theme) -->
+    <script>
+        tailwind = window.tailwind || {};
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'lrg-primary': '#002868',
+                        'lrg-accent': '#BF0A30'
+                    }
+                }
+            }
+        };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom font setup */
@@ -33,11 +46,28 @@
         }
     </style>
     <link rel="stylesheet" href="/Src/slider.css">
+    <link rel="stylesheet" href="/Src/styles.css">
 
+    <!-- FAVICON -->
+    <link href="./favicon.ico" rel="icon">
 
-      <!-- FAVICON LINK: -->
-     <link href="./favicon.ico" rel="icon">
-    <!-- END FAVICON LINKS -->
+    <!-- Bootstrap CSS (required for carousel/modal behaviors) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS (minimal, just for the visually-hidden bootstrap class if not using their full CSS) -->
+    <style>
+        .visually-hidden {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+    </style>
 
 </head>
 <body>
@@ -48,17 +78,10 @@
             <div class="flex justify-between items-center h-20">
                 
                 <!-- Logo/Company Name -->
-                <a href="#" class="flex items-center text-3xl font-extrabold text-lrg-primary" onclick="showPage('home')">
-                    
-                    <!-- LRG Logo Image Placeholder -->
-                  <img 
-                        src="./Public/Image/Logo.png" 
-                        alt="LRG Inc. Company Logo" 
-                        class="h-10 w-auto mr-3 rounded-md"
-                    >
-                    <!-- REMINDER: Replace the src attribute above with your actual logo image URL. -->
-                    
-                    LRG Inc.
+                <a href="#" class="flex items-center text-3xl font-extrabold text-lrg-primary" data-page="home" aria-label="Go to Home">
+                    <img src="./Public/Image/Logo.png" alt="LRG Inc. logo" class="h-10 w-auto mr-3 rounded-md" />
+                    <span class="sr-only">Liberia Renaissance Group (LRG Inc.)</span>
+                    <span aria-hidden="true">LRG Inc.</span>
                 </a>
 
                 <!-- Desktop Navigation Links -->
@@ -68,29 +91,37 @@
                     <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="services">Services</a>
                     <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="projects">Projects</a>
                     <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="team">Team & Equipment</a>
+                  
                 </nav>
 
                 <!-- Call to Action Button (Desktop) -->
                 <div class="hidden md:block">
-                    <button class="lrg-accent hover:bg-[#A91219] text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" onclick="showPage('contact')">
+                    <button type="button" class="lrg-accent hover:bg-[#A91219] text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" data-page="contact">
                         Contact Us
+                    </button>
+                </div>
+                 <!-- Call to Action Button (Desktop) -->
+                <div class="hidden md:block">
+                    <button type="button" class="lrg-accent hover:bg-[#A91219] text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" data-page="news">
+                        News & Insights
                     </button>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-700 hover:text-lrg-primary hover:bg-gray-100 transition duration-150">
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-700 hover:text-lrg-primary hover:bg-gray-100 transition duration-150" aria-controls="mobile-menu" aria-expanded="false" aria-label="Toggle navigation menu">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
             </div>
         </div>
         
         <!-- Mobile Menu (Hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden lrg-primary text-white shadow-xl">
+        <div id="mobile-menu" class="hidden md:hidden lrg-primary text-white shadow-xl" role="menu" aria-hidden="true">
             <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="home">Home</a>
             <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="about">About Us</a>
             <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="services">Services</a>
             <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="projects">Projects</a>
             <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="team">Team & Equipment</a>
+            <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="news">News & Insights</a>
             <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="contact">Contact Us</a>
         </div>
     </header>
@@ -123,7 +154,7 @@
         
         <!-- HOME PAGE -->
         <section id="page-home" class="page-content" data-title="Home Page">
-            <div class="bg-gray-800 text-white rounded-xl shadow-2xl p-6 md:p-16 mb-12" style="background-color: #00205B; background-size: cover; background-position: center; position: relative;">
+            <div class="bg-gray-800 text-white rounded-xl shadow-2xl p-6 md:p-16 mb-12 hero-bg relative">
                 <div class="absolute inset-0 bg-black opacity-60 rounded-xl"></div>
                 <div class="relative z-10">
                     <h1 class="text-4xl md:text-6xl font-black mb-4 text-lrg-accent drop-shadow-lg">
@@ -133,10 +164,10 @@
                         Liberia Renaissance Group (LRG Inc.) is a government-certified, 100% Liberian-owned company founded in 2014. We utilize the diverse expertise of our well-trained professionals to provide high-impact, integrated solutions across a wide range of sectors, dedicated to advancing the nation’s development, one project at a time.
                     </p>
                     <div class="mt-8 space-x-4">
-                        <button class="lrg-accent hover:bg-[#A91219] text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" onclick="showPage('projects')">
+                        <button type="button" class="lrg-accent hover:bg-[#A91219] text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="projects">
                             Explore our Projects
                         </button>
-                        <button class="bg-white hover:bg-gray-200 text-lrg-primary font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" onclick="showPage('contact')">
+                        <button type="button" class="bg-white hover:bg-gray-200 text-lrg-primary font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="contact">
                             Contact Us
                         </button>
                     </div>
@@ -201,7 +232,7 @@
                     </div>
                 </div>
                 <div class="text-center mt-10">
-                     <button class="lrg-accent hover:bg-[#A91219] text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" onclick="showPage('about')">
+                     <button type="button" class="lrg-accent hover:bg-[#A91219] text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="about">
                         Learn About Our Values
                     </button>
                 </div>
@@ -388,10 +419,10 @@
     </div>
 
     <!-- Let's Build Together CTA -->
-    <div class="text-center mt-12 lrg-primary p-8 rounded-xl shadow-xl text-white">
+                <div class="text-center mt-12 lrg-primary p-8 rounded-xl shadow-xl text-white">
         <h3 class="text-3xl font-bold text-lrg-accent mb-4">Let's Build Together</h3>
         <p class="text-xl mb-6">Whether you're planning a residential complex or a national infrastructure project, LRG is equipped to deliver excellence from concept to completion.</p>
-        <button class="lrg-accent hover:bg-[#A91219] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" onclick="showPage('contact')">
+        <button type="button" class="lrg-accent hover:bg-[#A91219] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="contact">
             Start Your Project
         </button>
     </div>
@@ -489,7 +520,7 @@
         <!-- Image Placeholders (Remaining Projects) -->
         <!-- 7. AFL Water Facility -->
         <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-            <img src="https://placehold.co/600x400/003366/ffffff?text=AFL+Water+Facility" class="w-full h-48 object-cover">
+            <img src="https://placehold.co/600x400/003366/ffffff?text=AFL+Water+Facility" alt="AFL Water Facility" class="w-full h-48 object-cover">
             <div class="p-6">
                 <h3 class="text-xl font-bold text-lrg-primary mb-2">Military Water Infrastructure</h3>
                 <p class="text-gray-600 text-sm mb-4">Todee Barracks water system installation</p>
@@ -499,7 +530,7 @@
 
         <!-- 8. FRESH AQUA Facility -->
         <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-            <img src="https://placehold.co/600x400/4CAF50/ffffff?text=FRESH+AQUA+Plant" class="w-full h-48 object-cover">
+            <img src="https://placehold.co/600x400/4CAF50/ffffff?text=FRESH+AQUA+Plant" alt="FRESH AQUA Plant" class="w-full h-48 object-cover">
             <div class="p-6">
                 <h3 class="text-xl font-bold text-lrg-primary mb-2">Community Water System</h3>
                 <p class="text-gray-600 text-sm mb-4">A.B Tolbert Road water infrastructure project</p>
@@ -509,7 +540,7 @@
 
         <!-- 9. Ford Showroom -->
         <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-            <img src="https://placehold.co/600x400/CF1822/ffffff?text=Ford+Showroom" class="w-full h-48 object-cover">
+            <img src="https://placehold.co/600x400/CF1822/ffffff?text=Ford+Showroom" alt="Ford Showroom" class="w-full h-48 object-cover">
             <div class="p-6">
                 <h3 class="text-xl font-bold text-lrg-primary mb-2">Automotive Showroom</h3>
                 <p class="text-gray-600 text-sm mb-4">Bushrod Island commercial construction</p>
@@ -519,7 +550,7 @@
 
         <!-- 10. Garsaw Residence -->
         <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-            <img src="/Public/Image/Modern Residential Complex Design.jpeg" class="w-full h-48 object-cover">
+            <img src="/Public/Image/Modern Residential Complex Design.jpeg" alt="Modern residential complex design" class="w-full h-48 object-cover">
             <div class="p-6">
                 <h3 class="text-xl font-bold text-lrg-primary mb-2">Luxury Residential Build</h3>
                 <p class="text-gray-600 text-sm mb-4">Contemporary home design & construction</p>
@@ -529,7 +560,7 @@
 
         <!-- 11. Bouconja Complex -->
         <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-            <img src="https://placehold.co/600x400/9C27B0/ffffff?text=6-Complex+Buildings" class="w-full h-48 object-cover">
+            <img src="https://placehold.co/600x400/9C27B0/ffffff?text=6-Complex+Buildings" alt="Multi-unit residential complex" class="w-full h-48 object-cover">
             <div class="p-6">
                 <h3 class="text-xl font-bold text-lrg-primary mb-2">Multi-Unit Residential</h3>
                 <p class="text-gray-600 text-sm mb-4">GSA Road apartment complex development</p>
@@ -539,7 +570,7 @@
 
         <!-- 12. GIZ Office Renovation -->
         <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-            <img src="/Public/Image/Diplomatic Facility Upgrade.jpg" class="w-full h-48 object-cover">
+            <img src="/Public/Image/Diplomatic Facility Upgrade.jpg" alt="Diplomatic facility upgrade" class="w-full h-48 object-cover">
             <div class="p-6">
                 <h3 class="text-xl font-bold text-lrg-primary mb-2">Diplomatic Facility Upgrade</h3>
                 <p class="text-gray-600 text-sm mb-4">Mamba Point office modernization</p>
@@ -550,7 +581,7 @@
        
          <!-- 13. Ministry of Public Works - Drainage -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="https://placehold.co/600x400/673AB7/ffffff?text=Drainage+Repairs" class="w-full h-48 object-cover">
+    <img src="https://placehold.co/600x400/673AB7/ffffff?text=Drainage+Repairs" alt="Urban drainage repairs" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">Urban Drainage Overhaul</h3>
         <p class="text-gray-600 text-sm mb-4">Comprehensive drainage system rehabilitation</p>
@@ -560,7 +591,7 @@
 
 <!-- 14. Ministry of Public Works - Road Maintenance -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="/Public/Image/Urban Road Maintenance.jpg" class="w-full h-48 object-cover">
+    <img src="/Public/Image/Urban Road Maintenance.jpg" alt="Urban road maintenance" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">Urban Road Maintenance</h3>
         <p class="text-gray-600 text-sm mb-4">7.5km of neighborhood road repairs</p>
@@ -570,7 +601,7 @@
 
 <!-- 15. Board of Tax Appeal Renovation -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="https://placehold.co/600x400/2196F3/ffffff?text=Tax+Board+Renovation" class="w-full h-48 object-cover">
+    <img src="https://placehold.co/600x400/2196F3/ffffff?text=Tax+Board+Renovation" alt="Tax board renovation" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">Tax Board Facility Upgrade</h3>
         <p class="text-gray-600 text-sm mb-4">Civil and interior renovation works</p>
@@ -580,7 +611,7 @@
 
 <!-- 16. MCC Road Network Project -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="/Public/Image/Geotechnical and Topographic Survey 2.jpg" class="w-full h-48 object-cover">
+    <img src="/Public/Image/Geotechnical and Topographic Survey 2.jpg" alt="Geotechnical and topographic survey" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">National Road Network Analysis</h3>
         <p class="text-gray-600 text-sm mb-4">Comprehensive data collection and assessment</p>
@@ -590,7 +621,7 @@
 
 <!-- 17. MCC Road User Surveys -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="./Public/Image/road 2.jpg" class="w-full h-48 object-cover">
+    <img src="./Public/Image/road 2.jpg" alt="Road user survey fieldwork" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">Nationwide Road User Study</h3>
         <p class="text-gray-600 text-sm mb-4">Detailed traffic pattern and usage analysis</p>
@@ -600,7 +631,7 @@
 
 <!-- 18. CLUS Access Road -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="/Public/Image/road.jpg" class="w-full h-48 object-cover">
+    <img src="/Public/Image/road.jpg" alt="CLUS Project Access Road" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">CLUS Project Access Road</h3>
         <p class="text-gray-600 text-sm mb-4">New road construction in Whien Town</p>
@@ -610,7 +641,7 @@
 
 <!-- 19. WHI Water Tower -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="/Public/Image/AFL Todee Barracks Water Facility.jpg" class="w-full h-48 object-cover">
+    <img src="/Public/Image/AFL Todee Barracks Water Facility.jpg" alt="AFL Todee Barracks Water Facility" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">Community Water Tower</h3>
         <p class="text-gray-600 text-sm mb-4">Reinforced concrete water tower construction</p>
@@ -620,7 +651,7 @@
 
 <!-- 20. Lonestar MTN Office -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="https://placehold.co/600x400/FFC107/ffffff?text=MTN+Office" class="w-full h-48 object-cover">
+    <img src="https://placehold.co/600x400/FFC107/ffffff?text=MTN+Office" alt="Lonestar MTN Office" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">Telecom Office Facility</h3>
         <p class="text-gray-600 text-sm mb-4">New mobile money branch construction</p>
@@ -630,7 +661,7 @@
 
 <!-- 21. Liberia Senate Renovation -->
 <div class="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300">
-    <img src="/Public/Image/Legislative Facility Upgrade.jpg" class="w-full h-48 object-cover">
+    <img src="/Public/Image/Legislative Facility Upgrade.jpg" alt="Legislative Facility Upgrade" class="w-full h-48 object-cover">
     <div class="p-6">
         <h3 class="text-xl font-bold text-lrg-primary mb-2">Legislative Facility Upgrade</h3>
         <p class="text-gray-600 text-sm mb-4">Ongoing renovation and maintenance works</p>
@@ -662,11 +693,11 @@
             </div>
 
             <!-- Final CTA -->
-            <div class="text-center mt-12">
-                <button class="lrg-primary hover:bg-[#00184A] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 mr-4 transform hover:scale-105" onclick="showPage('services')">
+                <div class="text-center mt-12">
+                <button type="button" class="lrg-primary hover:bg-[#00184A] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 mr-4 transform hover:scale-105" data-page="services">
                     Explore Our Services
                 </button>
-                <button class="lrg-accent hover:bg-[#A91219] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" onclick="showPage('contact')">
+                <button type="button" class="lrg-accent hover:bg-[#A91219] text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="contact">
                     Contact Us
                 </button>
             </div>
@@ -790,7 +821,7 @@
                 <!-- Contact Form (Placeholder) -->
                 <div class="bg-white p-8 rounded-xl shadow-xl border-t-4 border-lrg-accent">
                     <h2 class="text-3xl font-bold text-lrg-primary mb-6">Send Us a Message</h2>
-                    <form onsubmit="event.preventDefault(); showMessage('Thank you for your message! An LRG representative will be in touch shortly.');" class="space-y-4">
+                    <form id="contact-form" class="space-y-4">
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                             <input type="text" id="name" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-lrg-primary focus:ring-lrg-primary">
@@ -866,10 +897,10 @@
             </div>
 
             <!-- Custom Message Box for Form Submission -->
-            <div id="message-box" class="fixed top-0 left-0 right-0 z-[100] p-4 hidden">
+            <div id="message-box" class="fixed top-0 left-0 right-0 z-[100] p-4 hidden" aria-hidden="true">
                 <div class="max-w-md mx-auto bg-green-500 text-white p-4 rounded-lg shadow-xl flex justify-between items-center">
-                    <p id="message-text"></p>
-                    <button class="text-white font-bold text-xl ml-4" onclick="document.getElementById('message-box').classList.add('hidden')">&times;</button>
+                    <p id="message-text" role="status" aria-live="polite"></p>
+                    <button class="text-white font-bold text-xl ml-4" data-close>&times;</button>
                 </div>
             </div>
  <!-- Google Map Location Embed (New Section) -->
@@ -878,13 +909,13 @@
                 <h2 class="text-3xl font-bold text-lrg-primary p-6 pb-0">Find Our Location</h2>
                 
                 <!-- Aspect Ratio Container (16:9) for responsive map height -->
-                <div class="relative w-full" style="padding-top: 56.25%;"> 
+                <div class="relative w-full map-aspect"> 
                     <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d495.718948654608!2d-10.784221176931855!3d6.296339996927186!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xf09f9006bff35b1%3A0x933def8a6d15168f!2sLiberia%20Renaissance%20Group%20(LRG%20Inc.)!5e0!3m2!1sen!2sus!4v1759853594067!5m2!1sen!2sus" 
-                        class="absolute top-0 left-0 w-full h-full" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
+                        class="absolute top-0 left-0 w-full h-full no-border" 
+                        title="LRG Inc. office location map"
+                        allowfullscreen=""
+                        loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
@@ -896,6 +927,292 @@
         </section>
 
     </main>
+    
+    <!-- ======= News & Insights Section (Integrated Content with R-W-B Colors) ======= -->
+    <section id="news-insights" class="py-16">
+        <div class="news-insights-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Header -->
+            <h2 class="text-5xl font-extrabold text-lrg-primary mb-6 text-center">News & Insights</h2>
+            <p class="text-xl text-gray-600 mb-12 text-center max-w-3xl mx-auto">
+                Stay up-to-date with our latest projects, community initiatives, and press releases across all our sectors.
+            </p>
+
+            <!-- Featured News Carousel (Slideshow Format) -->
+            <div class="featured-news-carousel relative mb-12">
+                <div id="featuredNewsCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+                    <div class="carousel-inner">
+                        
+                        <!-- Slide 1: ACTIVE -->
+                        <div class="carousel-item active">
+                            <div class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-accent">
+                                <div class="grid grid-cols-1 md:grid-cols-2">
+                                    <div class="md:order-2">
+                                        <!-- Placeholder Image -->
+                                        <img src="https://placehold.co/800x600/002868/FFFFFF?text=Featured+News+1" onerror="this.onerror=null;this.src='./Public/Image/featured-news-1.jpg';" alt="Featured News 1" class="w-full h-full object-cover min-h-[300px]">
+                                    </div>
+                                    <div class="p-8">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Tourism Development</span>
+                                            <time class="text-sm text-gray-500">November 2025</time>
+                                        </div>
+                                        <h3 class="text-3xl font-bold text-lrg-primary mb-4">Gov't Kicks Off Tourism Development Projects Under AAID FY2025</h3>
+                                        <div class="prose max-w-none text-gray-700 leading-relaxed">
+                                            <p class="mb-4">
+                                                The Ministry of Information, Cultural Affairs, and Tourism (MICAT), through the PSIP budgetary appropriation, launched several milestone tourism projects...
+                                            </p>
+                                        </div>
+                                        <div class="mt-6 pt-4 border-t border-gray-200">
+                                            <a href="https://www.liberianobserver.com/business/gov-t-kicks-off-tourism-development-projects-under-aaid-fy2025/article_d874586c-5c26-4df7-8874-446da9a72545.html" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                                Read Full Article
+                                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Inactive (Needed for buttons to work) -->
+                        <div class="carousel-item">
+                            <div class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-primary">
+                                <div class="grid grid-cols-1 md:grid-cols-2">
+                                    <div class="md:order-2">
+                                        <!-- Placeholder Image -->
+                                        <img src="https://placehold.co/800x600/BF0A30/FFFFFF?text=Featured+News+2" onerror="this.onerror=null;this.src='./Public/Image/featured-news-2.jpg';" alt="Featured News 2" class="w-full h-full object-cover min-h-[300px]">
+                                    </div>
+                                    <div class="p-8">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <span class="inline-block bg-lrg-accent text-white text-xs font-semibold px-3 py-1 rounded-full">New Infrastructure</span>
+                                            <time class="text-sm text-gray-500">October 2025</time>
+                                        </div>
+                                        <h3 class="text-3xl font-bold text-lrg-primary mb-4">LRG Secures $500M Loan for Power Generation Project</h3>
+                                        <div class="prose max-w-none text-gray-700 leading-relaxed">
+                                            <p class="mb-4">
+                                                A major funding milestone has been reached, enabling the development of a large-scale solar power farm in the Eastern region, significantly boosting national grid capacity.
+                                            </p>
+                                        </div>
+                                        <div class="mt-6 pt-4 border-t border-gray-200">
+                                            <a href="#" class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                                View Press Release
+                                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Add more carousel items as needed -->
+                    </div>
+                    
+                    <!-- Carousel Controls (Now Functional) -->
+                    <button class="carousel-control-prev absolute top-1/2 left-4 transform -translate-y-1/2 text-white bg-lrg-primary bg-opacity-70 p-2 rounded-full hover:bg-lrg-accent transition duration-150" type="button" data-bs-target="#featuredNewsCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next absolute top-1/2 right-4 transform -translate-y-1/2 text-white bg-lrg-primary bg-opacity-70 p-2 rounded-full hover:bg-lrg-accent transition duration-150" type="button" data-bs-target="#featuredNewsCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- News Articles - 3-column Grid (First Row) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- YouTube Video Highlight Card (Red Accent Border) -->
+                <article class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-accent group hover:shadow-2xl transition duration-300"> 
+                    <div class="relative pt-[56.25%]">
+                        <iframe class="absolute top-0 left-0 w-full h-full" 
+                                src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" 
+                                title="LRG CEO Interview (Placeholder)" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <!-- Red Background for video category -->
+                            <span class="inline-block bg-lrg-accent text-white text-xs font-semibold px-3 py-1 rounded-full">Video Update</span>
+                            <time class="text-sm text-gray-500">November 2025</time>
+                        </div>
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2 group-hover:text-lrg-accent transition duration-150">Watch: LRG's CEO on Infrastructure Development</h3>
+                        <p class="text-gray-700 text-sm mb-4">A short message from our leadership detailing the progress of the national road network overhaul.</p>
+                        <div class="pt-3 border-t border-gray-200">
+                            <!-- Red Accent Text -->
+                            <a href="YOUR_FULL_VIDEO_LINK" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                Open Video Link
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- News Article 1 -->
+                <article class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-accent group hover:shadow-2xl transition duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <!-- Blue Background -->
+                            <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Project Updates</span>
+                            <time class="text-sm text-gray-500">October 2025</time>
+                        </div>
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2 group-hover:text-lrg-accent transition duration-150">LRG Completes Major Road Rehabilitation Project in Monrovia</h3>
+                        <p class="text-gray-700 text-sm mb-4">
+                            LRG Inc. has successfully completed a comprehensive road rehabilitation project, improving critical infrastructure...
+                        </p>
+                        <div class="pt-3 border-t border-gray-200">
+                            <!-- Red Accent Text -->
+                            <a href="#" class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                Read More
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Placeholder Article 3 -->
+                <article class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-accent group hover:shadow-2xl transition duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <!-- Blue Background -->
+                            <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Community</span>
+                            <time class="text-sm text-gray-500">September 2025</time>
+                        </div>
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2 group-hover:text-lrg-accent transition duration-150">Scholarship Program Announced for Local Students</h3>
+                        <p class="text-gray-700 text-sm mb-4">As part of our commitment to Liberia's future, LRG is launching a new education fund for local universities.</p>
+                        <div class="pt-3 border-t border-gray-200">
+                            <!-- Red Accent Text -->
+                            <a href="#" class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                Read More
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+            </div> 
+            <!-- End of First Row of Articles -->
+
+
+            <!-- Multi-Media Feature Block: Image Gallery (Red/Blue Themed) -->
+            <div class="my-12 py-8 bg-gray-50 rounded-xl shadow-inner overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center px-8">
+                    
+                    <!-- Text Column (1/3 Width) -->
+                    <div class="lg:col-span-1">
+                        <span class="inline-block text-sm font-semibold text-lrg-accent mb-2">Project Media</span>
+                        <h3 class="text-3xl font-bold text-lrg-primary mb-4">Project Spotlight: Road Rehab Progress</h3>
+                        <p class="text-gray-700 mb-6">
+                            See the before-and-after transformation of the critical infrastructure in Monrovia. We used state-of-the-art construction techniques to ensure longevity.
+                        </p>
+                        <!-- Call to Action Button - NOW OPENS MODAL -->
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#galleryModal" class="inline-block bg-lrg-accent hover:bg-lrg-primary text-white text-sm font-semibold px-5 py-3 rounded-lg shadow transition duration-300">
+                            Launch Full Photo Gallery
+                        </button>
+                    </div>
+
+                    <!-- Slideshow Column (2/3 Width) -->
+                    <div class="lg:col-span-2">
+                        <!-- Placeholder Image (Simulating Slideshow) -->
+                        <div class="relative rounded-lg overflow-hidden shadow-2xl border-4 border-white">
+                            <img src="https://placehold.co/800x450/002868/FFFFFF?text=Gallery+Placeholder" onerror="this.onerror=null;this.src='./Public/Image/project-gallery-1.jpg';" alt="Road Rehabilitation Project Image" class="w-full h-auto object-cover max-h-[450px]">
+                            <div class="absolute bottom-0 left-0 bg-lrg-primary bg-opacity-80 text-white p-3 w-full text-center text-sm font-medium">
+                                Phase 2 Completion: View of the new asphalt and drainage installation.
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+
+            <!-- More Articles can be added here in another grid row -->
+            <div class="text-center py-6">
+                <p class="text-gray-500 italic">More news articles can be added here to extend the grid layout...</p>
+            </div>
+
+
+            <!-- Pagination or Load More - Blue Background -->
+            <div class="text-center mt-12">
+                <button class="bg-lrg-primary hover:bg-lrg-accent text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
+                    Load More Articles
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- End News & Insights Section -->
+
+    
+    <!-- ======= MODAL: Full Photo Gallery (Lightbox) ======= -->
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content rounded-xl overflow-hidden">
+                <div class="modal-header bg-lrg-primary text-white border-b-2 border-lrg-accent">
+                    <h5 class="modal-title font-bold" id="galleryModalLabel">Project Spotlight: Road Rehab Gallery</h5>
+                    <!-- Using btn-close-white for better contrast against dark blue background -->
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <!-- Inner Carousel for Gallery Images -->
+                    <div id="galleryCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            
+                            <!-- Gallery Item 1 -->
+                            <div class="carousel-item active">
+                                <img src="https://placehold.co/1200x800/002868/FFFFFF?text=Gallery+Image+1%0A(Before)" class="d-block w-full" alt="Gallery Image 1">
+                                <div class="carousel-caption hidden md:block absolute bottom-0 bg-black bg-opacity-50 p-2 w-full text-center">
+                                    <h5 class="text-lg font-semibold text-white">Phase I: Initial Site Assessment</h5>
+                                    <p class="text-sm text-gray-200">Checking existing infrastructure integrity before demolition and planning phase.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Gallery Item 2 -->
+                            <div class="carousel-item">
+                                <img src="https://placehold.co/1200x800/BF0A30/FFFFFF?text=Gallery+Image+2%0A(Progress)" class="d-block w-full" alt="Gallery Image 2">
+                                <div class="carousel-caption hidden md:block absolute bottom-0 bg-black bg-opacity-50 p-2 w-full text-center">
+                                    <h5 class="text-lg font-semibold text-white">Active Construction: Drainage Installation</h5>
+                                    <p class="text-sm text-gray-200">Laying new subterranean drainage to prevent future flooding and water damage.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Gallery Item 3 -->
+                            <div class="carousel-item">
+                                <img src="https://placehold.co/1200x800/002868/FFFFFF?text=Gallery+Image+3%0A(After)" class="d-block w-full" alt="Gallery Image 3">
+                                <div class="carousel-caption hidden md:block absolute bottom-0 bg-black bg-opacity-50 p-2 w-full text-center">
+                                    <h5 class="text-lg font-semibold text-white">Completion: New Pavement and Markings</h5>
+                                    <p class="text-sm text-gray-200">The final layer of asphalt and clear road markings delivered for safety.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gallery Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <!-- End Inner Carousel -->
+                </div>
+                <div class="modal-footer justify-center bg-gray-50">
+                    <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-150" data-bs-dismiss="modal">Close Gallery</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
 
     <!-- Footer -->
     <footer class="lrg-primary text-white mt-12">
@@ -911,9 +1228,9 @@
                 <div>
                     <h4 class="text-xl font-semibold mb-3">Quick Links</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" onclick="showPage('services')" class="hover:text-lrg-accent transition duration-150">Services Portfolio</a></li>
-                        <li><a href="#" onclick="showPage('projects')" class="hover:text-lrg-accent transition duration-150">Client Projects</a></li>
-                        <li><a href="#" onclick="showPage('about')" class="hover:text-lrg-accent transition duration-150">Our Company</a></li>
+                        <li><a href="#" data-page="services" class="hover:text-lrg-accent transition duration-150">Services Portfolio</a></li>
+                        <li><a href="#" data-page="projects" class="hover:text-lrg-accent transition duration-150">Client Projects</a></li>
+                        <li><a href="#" data-page="about" class="hover:text-lrg-accent transition duration-150">Our Company</a></li>
                     </ul>
                 </div>
 
@@ -931,10 +1248,10 @@
                 <div>
                     <h4 class="text-xl font-semibold mb-3">Connect</h4>
                     <div class="flex space-x-4">
-                        <a href="https://web.facebook.com/construct.liberia/about"  class="hover:text-lrg-accent transition duration-150" aria-label="Facebook" target="_blank">
+                                <a href="https://web.facebook.com/construct.liberia/about"  class="hover:text-lrg-accent transition duration-150" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24h11.458v-8.397H9.761V12.16h3.022V9.45c0-3.007 1.794-4.668 4.532-4.668 1.309 0 2.428.232 2.753.334v3.189h-1.898c-1.492 0-1.782.71-1.782 1.75v2.305h3.551l-.462 3.585h-3.089V24h6.113c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg>
                         </a>
-                        <a href="https://www.linkedin.com/in/liberia-renaissance-construction-company-94303b140/" target="_blank" class="hover:text-lrg-accent transition duration-150" aria-label="LinkedIn">
+                        <a href="https://www.linkedin.com/in/liberia-renaissance-construction-company-94303b140/" target="_blank" class="hover:text-lrg-accent transition duration-150" aria-label="LinkedIn" rel="noopener noreferrer">
                             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.629c0-1.336-.023-3.054-1.852-3.054-1.853 0-2.136 1.445-2.136 2.964v5.719h-3.553V9.091h3.414v1.562h.046c.477-.9 1.637-1.852 3.37-1.852 3.606 0 4.275 2.365 4.275 5.452v6.237zM5.044 7.214h-.022C3.847 7.214 3 6.31 3 5.309 3 4.305 3.824 3.4 5.044 3.4c1.222 0 2.01 0.905 2.032 1.903.023 1.006-.798 1.908-2.032 1.908zm-1.758 13.238H6.8V9.091H3.286v11.361zM22.22 1H1.78C1.35 1 1 1.35 1 1.78v20.44C1 22.65 1.35 23 1.78 23h20.44c.43 0 .78-.35.78-.78V1.78c0-.43-.35-.78-.78-.78z"/></svg>
                         </a>
                         <a href="#" class="hover:text-lrg-accent transition duration-150" aria-label="Instagram" target="_blank">
@@ -957,92 +1274,10 @@
         </div>
     </footer>
 
-    <script>
-        // --- Navigation and State Management ---
-
-        // Get all navigation links and content sections
-        const navLinks = document.querySelectorAll('.nav-link');
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-        const contentSections = document.querySelectorAll('.page-content');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const messageBox = document.getElementById('message-box');
-        const messageText = document.getElementById('message-text');
-
-        /**
-         * Shows the specified page content and updates the navigation state.
-         * @param {string} pageId - The ID of the page to show (e.g., 'home', 'about').
-         */
-        function showPage(pageId) {
-            // Hide all content sections
-            contentSections.forEach(section => {
-                section.classList.add('hidden');
-            });
-
-            // Show the requested section
-            const targetSection = document.getElementById(`page-${pageId}`);
-            if (targetSection) {
-                targetSection.classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
-
-                // Update active class for desktop nav
-                document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('data-page') === pageId) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-        }
-
-        /**
-         * Displays a custom message box instead of using alert().
-         * @param {string} message - The message to display.
-         */
-        function showMessage(message) {
-            messageText.textContent = message;
-            messageBox.classList.remove('hidden');
-            // Hide after 4 seconds
-            setTimeout(() => {
-                messageBox.classList.add('hidden');
-            }, 4000);
-        }
-
-        // --- Event Listeners ---
-
-        // 1. Desktop Navigation Click Handler
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = e.target.getAttribute('data-page');
-                showPage(page);
-            });
-        });
-
-        // 2. Mobile Navigation Click Handler
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = e.target.getAttribute('data-page');
-                showPage(page);
-                mobileMenu.classList.add('hidden'); // Close menu after selection
-            });
-        });
-
-        // 3. Mobile Menu Button Toggle
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // 4. Initial Load Setup
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set current year in footer
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // Initialize the Home page view
-            showPage('home');
-        });
-    </script>
-    <script src="./Src/slider.js"></script>
+    <script src="./Src/main.js" defer></script>
+    <script src="./Src/slider.js" defer></script>
+    
+    <!-- 4. Bootstrap JavaScript (Bundle with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
