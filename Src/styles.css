@@ -17,3 +17,46 @@
 .no-border {
   border: 0;
 }
+
+/* Button improvements */
+.btn-gallery {
+  background: linear-gradient(90deg, #CF1822 0%, #BF0A30 100%);
+  color: #ffffff;
+  font-weight: 600;
+  padding: .75rem 1.25rem;
+  border-radius: .5rem;
+  box-shadow: 0 6px 18px rgba(203,28,36,0.18);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  display: inline-block;
+}
+.btn-gallery:hover,
+.btn-gallery:focus {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(203,28,36,0.28);
+  filter: brightness(1.05);
+}
+.btn-gallery:focus-visible {
+  outline: 3px solid rgba(255,255,255,0.18);
+  outline-offset: 3px;
+}
+
+.btn-load {
+  background: linear-gradient(90deg, #00205B 0%, #004080 100%);
+  color: #ffffff;
+  font-weight: 700;
+  padding: .75rem 1.5rem;
+  border-radius: .5rem;
+  box-shadow: 0 8px 20px rgba(0,32,91,0.18);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  display: inline-block;
+}
+.btn-load:hover,
+.btn-load:focus {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 36px rgba(0,32,91,0.32);
+  filter: brightness(1.06);
+}
+.btn-load:focus-visible {
+  outline: 3px solid rgba(255,255,255,0.12);
+  outline-offset: 3px;
+}
