@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liberia Renaissance Group (LRG Inc.)</title>
+
+    <!-- Bootstrap CSS (required for carousel/modal behaviors) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons (for WhatsApp) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Standardized LRG colors based on your CSS
+                        'lrg-primary': '#00205B', // Deep Navy Blue
+                        'lrg-accent': '#CF1822', // Vibrant Red
+                        'whatsapp': '#25D366',
+                        'whatsapp-hover': '#1DA851'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- Custom Styles -->
+    <style>
+        /* Custom font setup */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc; /* Light background for the body */
+        }
+
+        /* Style for the active navigation link */
+        .nav-link.active {
+            font-weight: 700;
+            color: #CF1822; /* Red text for active link */
+            border-bottom: 3px solid #CF1822;
+        }
+
+        /* Project Filter Styles */
+        .project-filter-btn {
+            transition: all 0.3s ease;
+        }
+        .project-filter-btn.active {
+            background-color: #00205B; /* lrg-primary */
+            color: #ffffff;
+            box-shadow: 0 4px 14px 0 rgba(0, 32, 91, 0.3);
+        }
+        .project-card {
+            transition: all 0.3s ease-in-out;
+            transform-origin: center;
+        }
+        /* Style for hidden project cards */
+        .project-card.hidden {
+            transform: scale(0);
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            /* We use display: none; via JS, but these provide a fallback */
+        }
+
+        /* Custom Social & CTA Buttons (Replaced external CSS) */
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .social-btn svg { width: 1.25rem; height: 1.25rem; margin-right: 0.5rem; }
+        .social-btn.social-fb { background-color: #1877F2; }
+        .social-btn.social-fb:hover { background-color: #1669D4; }
+        .social-btn.social-yt { background-color: #FF0000; }
+        .social-btn.social-yt:hover { background-color: #E60000; }
+        .social-btn.social-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .social-btn.social-ig:hover { opacity: 0.9; }
+        .social-btn.social-ln { background-color: #0A66C2; }
+        .social-btn.social-ln:hover { background-color: #095AB8; }
+        
+        .social-btn--sm {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .social-btn--sm svg { width: 1.25rem; height: 1.25rem; }
+        
+        .btn-gallery {
+            background-color: #00205B;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            transform: scale(1);
+        }
+        .btn-gallery:hover {
+            background-color: #00184A;
+            transform: scale(1.05);
+            box-shadow: 0 4px 14px 0 rgba(0, 32, 91, 0.3);
+        }
+        
+        .btn-load {
+            background-color: #00205B;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .btn-load:hover {
+            background-color: #00184A;
+            box-shadow: 0 4px 14px 0 rgba(0, 32, 91, 0.3);
+        }
+
+        /* WhatsApp Pulse Animation */
+        @keyframes whatsapp-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        .whatsapp-pulse {
+            animation: whatsapp-pulse 2s infinite;
+        }
+
+        /* Google Map Responsive Embed */
+        .map-aspect {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        }
+        .map-aspect iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Visually hidden class for Bootstrap compatibility */
+        .visually-hidden {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                
+                <!-- Logo/Company Name -->
+                <a href="#" class="flex items-center text-3xl font-extrabold text-lrg-primary" data-page="home" aria-label="Go to Home">
+                    <!-- Recommended: Use a transparent PNG or SVG for the logo -->
+                    <img src="https://placehold.co/100x100/00205B/FFFFFF?text=LRG" alt="LRG Inc. logo" class="h-10 w-auto mr-3 rounded-md" onerror="this.src='https://placehold.co/100x100/00205B/FFFFFF?text=LRG';" />
+                    <span class="sr-only">Liberia Renaissance Group (LRG Inc.)</span>
+                    <span aria-hidden="true">LRG Inc.</span>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="home">Home</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="about">About Us</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="services">Services</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="projects">Projects</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="team">Team & Equipment</a>
+                    <!-- IMPROVEMENT: Moved News from button to nav link -->
+                    <a href="#" class="nav-link text-gray-700 hover:text-lrg-primary py-5 transition duration-150" data-page="news">News & Insights</a>
+                </nav>
+
+                <!-- Call to Action Button (Desktop) -->
+                <div class="hidden md:block">
+                    <button type="button" class="bg-lrg-accent hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" data-page="contact">
+                        Contact Us
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-700 hover:text-lrg-primary hover:bg-gray-100 transition duration-150" aria-controls="mobile-menu" aria-expanded="false" aria-label="Toggle navigation menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-lrg-primary text-white shadow-xl" role="menu" aria-hidden="true">
+            <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="home">Home</a>
+            <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="about">About Us</a>
+            <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="services">Services</a>
+            <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="projects">Projects</a>
+            <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="team">Team & Equipment</a>
+            <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="news">News & Insights</a>
+            <a href="#" class="mobile-nav-link block px-4 py-2 text-sm hover:bg-blue-800" data-page="contact">Contact Us</a>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+
+        <!-- 
+        =================================================
+        IMPROVEMENT: Replaced custom slider with Bootstrap Carousel.
+        This removes the need for slider.js and standardizes your components.
+        =================================================
+        -->
+        <div id="bannerCarousel" class="carousel slide carousel-fade relative w-full h-64 md:h-96 overflow-hidden rounded-lg shadow-lg mb-12" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+            </div>
+            <div class="carousel-inner h-full">
+                <div class="carousel-item active h-full">
+                    <img src="https://placehold.co/1200x600/00205B/FFFFFF?text=Slide+1" alt="Slide 1" loading="lazy" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x600/00205B/FFFFFF?text=Slide+1';">
+                </div>
+                <div class="carousel-item h-full">
+                    <img src="https://placehold.co/1200x600/CF1822/FFFFFF?text=Slide+2" alt="Slide 2" loading="lazy" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x600/CF1822/FFFFFF?text=Slide+2';">
+                </div>
+                <div class="carousel-item h-full">
+                    <img src="https://placehold.co/1200x600/EEEEEE/333333?text=Slide+3" alt="Slide 3" loading="lazy" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x600/EEEEEE/333333?text=Slide+3';">
+                </div>
+                <div class="carousel-item h-full">
+                    <img src="https://placehold.co/1200x600/00205B/FFFFFF?text=Slide+4" alt="Slide 4" loading="lazy" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x600/00205B/FFFFFF?text=Slide+4';">
+                </div>
+                <div class="carousel-item h-full">
+                    <img src="https://placehold.co/1200x600/CF1822/FFFFFF?text=Slide+5" alt="Slide 5" loading="lazy" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x600/CF1822/FFFFFF?text=Slide+5';">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+
+        <!-- HOME PAGE -->
+        <section id="page-home" class="page-content" data-title="Home Page">
+            <!-- Hero Section -->
+            <div class="bg-lrg-primary text-white rounded-xl shadow-2xl p-6 md:p-16 mb-12 relative overflow-hidden" role="banner">
+                <!-- Overlay -->
+                <div classs="absolute inset-0 bg-black opacity-30 rounded-xl" aria-hidden="true" style="background-image: url('https.placehold.co/1200x600/00205B/FFFFFF?text=Hero+BG'); background-size: cover; background-position: center; opacity: 0.1; position: absolute; inset: 0; filter: blur(2px);"></div>
+                <div class="relative z-10">
+                    <h1 class="text-4xl md:text-6xl font-black mb-4 text-white drop-shadow-lg">
+                        LRG Inc.: Integrated Solutions for <span class="text-lrg-accent">Liberia's Progress.</span>
+                    </h1>
+                    <p class="text-lg md:text-xl font-light max-w-4xl text-gray-200">
+                        Liberia Renaissance Group (LRG Inc.) is a government-certified, 100% Liberian-owned company founded in 2014. We provide high-impact, integrated solutions across a wide range of sectors, dedicated to advancing the nation’s development.
+                    </p>
+                    <div class="mt-8 space-y-3 sm:space-y-0 sm:space-x-4">
+                        <button type="button" class="w-full sm:w-auto bg-lrg-accent hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="projects">
+                            Explore our Projects
+                        </button>
+                        <button type="button" class="w-full sm:w-auto bg-white hover:bg-gray-200 text-lrg-primary font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="contact">
+                            Contact Us
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What We Do -->
+            <div class="my-16">
+                <h2 class="text-4xl font-bold text-center text-lrg-primary mb-12">What We Do</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-xl border-t-4 border-lrg-primary text-center transform hover:scale-105 transition duration-300">
+                        <svg class="w-10 h-10 mx-auto mb-4 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <h3 class="text-xl font-semibold text-gray-800">Architectural Design & Planning</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-xl border-t-4 border-lrg-primary text-center transform hover:scale-105 transition duration-300">
+                        <svg class="w-10 h-10 mx-auto mb-4 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
+                        <h3 class="text-xl font-semibold text-gray-800">Civil & Structural Engineering</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-xl border-t-4 border-lrg-primary text-center transform hover:scale-105 transition duration-300">
+                        <svg class="w-10 h-10 mx-auto mb-4 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <h3 class="text-xl font-semibold text-gray-800">Project Management & Consultancy</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-xl border-t-4 border-lrg-primary text-center transform hover:scale-105 transition duration-300">
+                        <svg class="w-10 h-10 mx-auto mb-4 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <h3 class="text-xl font-semibold text-gray-800">Environmental & Feasibility Studies</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-xl border-t-4 border-lrg-primary text-center transform hover:scale-105 transition duration-300">
+                        <svg class="w-10 h-10 mx-auto mb-4 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4-8-4m16 0v10l-8 4-8-4V7"></path></svg>
+                        <h3 class="text-xl font-semibold text-gray-800">Logistics & Supply Chain</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-xl border-t-4 border-lrg-primary text-center transform hover:scale-105 transition duration-300">
+                        <svg class="w-10 h-10 mx-auto mb-4 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        <h3 class="text-xl font-semibold text-gray-800">Security, ICT & Minerals</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Why Choose LRG -->
+            <div class="bg-lrg-primary text-white rounded-xl shadow-2xl p-8 md:p-12 mt-16">
+                <h2 class="text-4xl font-bold text-center text-lrg-accent mb-8">Why Choose LRG?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 text-lrg-accent mr-3 mt-1">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-lg text-gray-200">Proven track record with government and private clients</p>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 text-lrg-accent mr-3 mt-1">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-lg text-gray-200">Multidisciplinary team of certified professionals</p>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 text-lrg-accent mr-3 mt-1">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-lg text-gray-200">Commitment to quality, safety, and sustainability</p>
+                    </div>
+                </div>
+                <div class="text-center mt-10">
+                    <button type="button" class="bg-lrg-accent hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="about">
+                        Learn About Our Values
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT US PAGE -->
+        <section id="page-about" class="page-content hidden" data-title="About Us Page">
+            <h1 class="text-5xl font-extrabold text-lrg-primary mb-6">About Liberia Renaissance Group (LRG Inc.)</h1>
+            <p class="text-xl text-gray-600 mb-12 border-b-2 border-lrg-accent pb-4">Engineering Liberia's Built Environment Since 2014.</p>
+
+            <div class="lg:grid lg:grid-cols-3 gap-12">
+                <!-- Company Overview -->
+                <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-lg mb-8 lg:mb-0">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Company Overview</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        Liberia Renaissance Group (LRG Inc.) began as a sole proprietorship in 2013 and was incorporated in 2014. Formerly known as Liberia Renaissance Construction Company, 
+                        LRG has evolved into a **full-service engineering firm** specializing in architecture, civil works, and project supervision. 
+                        Our commitment is to deliver high-quality, impactful projects that contribute directly to national development. Our headquarters is located on 9th Street, Sinkor, Monrovia.
+                    </p>
+                </div>
+
+                <!-- Core Values -->
+                <div class="bg-gray-100 p-8 rounded-xl shadow-lg border-l-4 border-lrg-accent">
+                    <h2 class="text-3xl font-bold text-lrg-primary mb-4">Core Values</h2>
+                    <ul class="space-y-3 text-lg text-gray-700">
+                        <li class="flex items-center"><span class="text-lrg-accent mr-2 font-black text-xl">◆</span> Excellence</li>
+                        <li class="flex items-center"><span class="text-lrg-accent mr-2 font-black text-xl">◆</span> Integrity</li>
+                        <li class="flex items-center"><span class="text-lrg-accent mr-2 font-black text-xl">◆</span> Collaboration</li>
+                        <li class="flex items-center"><span class="text-lrg-accent mr-2 font-black text-xl">◆</span> Sustainability</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Mission, Vision & Leadership -->
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-lrg-primary">
+                    <h3 class="text-2xl font-bold text-lrg-accent mb-3">Commitment to Excellence</h3>
+                    <p class="text-gray-700">To deliver world-class engineering and construction services that elevate Liberia's built environment and empower communities.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-lrg-primary">
+                    <h3 class="text-2xl font-bold text-lrg-accent mb-3">Vision for the Future</h3>
+                    <p class="text-gray-700">To be Liberia's most trusted and innovative infrastructure partner.</p>
+                </div>
+                <!-- This is a bit redundant with the Team page, but good for a summary -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-lrg-primary">
+                    <h3 class="text-2xl font-bold text-lrg-accent mb-3">Leadership Snippet</h3>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li>**G. Delino Bryant**, *President/CEO*</li>
+                        <li>**Ahmadu W. Jalloh**, *Technical Manager*</li>
+                        <li>**Hassan Johnson**, *Technical Manager*</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Our Mission & Vision -->
+            <div class="mt-12">
+                <h2 class="text-3xl font-bold text-lrg-primary mb-4 text-center">Our Goals</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-lrg-accent mb-3">Our Mission</h3>
+                        <p class="text-lg text-gray-700 leading-relaxed">
+                            To improve quality Business Services to our Clients (GOL, INGOs, NGOs, Private Businesses and Individuals) and to ensure Excellent Services and working Relationships with our Clients.
+                        </p>
+                    </div>
+                    <div class="bg-gray-100 p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-lrg-accent mb-3">Our Vision</h3>
+                        <p class="text-lg text-gray-700 leading-relaxed">
+                            To be one of the Reliable, Efficient, Effective, and outstanding Liberian owned business and to have a growth of 200 staff within the next 5 years.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg md:col-span-2">
+                        <h4 class="text-2xl font-bold text-lrg-accent mb-3">Expansion & Partnership</h4>
+                        <p class="text-gray-700">
+                            Within the next 5 years, LRG plans to establish at least three sub-offices in other counties and to establish an international partnership desk.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SERVICES PAGE -->
+        <section id="page-services" class="page-content hidden" data-title="Services Page">
+            <h1 class="text-5xl font-extrabold text-lrg-primary mb-6">Comprehensive Services for Diverse Clients</h1>
+            <p class="text-xl text-gray-600 mb-12">LRG brings extensive expertise across diverse sectors, serving the Government of Liberia (GOL), international and local NGOs, private enterprises, and individuals. We are dedicated to providing innovative, customized solutions to drive meaningful and sustainable results.</p>
+
+            <!-- Services Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 1. Architecture & Planning -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-l-8 border-lrg-accent">
+                    <h2 class="text-3xl font-bold text-lrg-primary mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        1. Architecture & Planning
+                    </h2>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                        <li>High-rise and low-income housing</li>
+                        <li>Educational and health facilities</li>
+                        <li>Industrial complexes</li>
+                        <li>Renovation and rehabilitation of public buildings</li>
+                    </ul>
+                </div>
+
+                <!-- 2. Engineering Services -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-l-8 border-lrg-accent">
+                    <h2 class="text-3xl font-bold text-lrg-primary mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path></svg>
+                        2. Engineering Services
+                    </h2>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                        <li>Electrical and water reticulation</li>
+                        <li>Drainage and landscaping</li>
+                        <li>Structural design and topographic surveys</li>
+                        <li>Road construction and maintenance</li>
+                    </ul>
+                </div>
+
+                <!-- 3. Project Management & Consultancy -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-l-8 border-lrg-accent">
+                    <h2 class="text-3xl font-bold text-lrg-primary mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        3. Project Management & Consultancy
+                    </h2>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                        <li>Feasibility studies and pre-investment analysis</li>
+                        <li>Quantity surveying and cost estimation</li>
+                        <li>Tender preparation and evaluation</li>
+                        <li>Environmental mitigation plans</li>
+                    </ul>
+                </div>
+
+                <!-- 4. Technical Support & Equipment -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-l-8 border-lrg-accent">
+                    <h2 class="text-3xl font-bold text-lrg-primary mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        4. Technical Support & Equipment
+                    </h2>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                        <li>On-site supervision and technical staffing</li>
+                        <li>Access to modern equipment including trucks, mixers, and survey tools</li>
+                    </ul>
+                </div>
+
+                <!-- 5. Logistics & Supply Chain -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-l-8 border-lrg-accent">
+                    <h2 class="text-3xl font-bold text-lrg-primary mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4-8-4m16 0v10l-8 4-8-4V7"></path></svg>
+                        5. Logistics & Supply Chain
+                    </h2>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                        <li>Stationary Supply</li>
+                        <li>Cars Rentals & Clearing & Forwarding</li>
+                        <li>Furniture and wood preparation and supplies</li>
+                        <li>Procurement and managerial consultancy</li>
+                    </ul>
+                </div>
+
+                <!-- 6. Security, ICT & Minerals -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-l-8 border-lrg-accent">
+                    <h2 class="text-3xl font-bold text-lrg-primary mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3 text-lrg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        6. Security, ICT & Minerals
+                    </h2>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                        <li>Security Guard & Private Security</li>
+                        <li>Database / ICT Services</li>
+                        <li>Mining & Minerals (Gold & Diamond)</li>
+                        <li>Feasibility and Pre-Investment Studies</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Let's Build Together CTA -->
+            <div class="text-center mt-12 bg-lrg-primary p-8 rounded-xl shadow-xl text-white">
+                <h3 class="text-3xl font-bold text-lrg-accent mb-4">Let's Build Together</h3>
+                <p class="text-xl mb-6">Whether you're planning a residential complex or a national infrastructure project, LRG is equipped to deliver excellence from concept to completion.</p>
+                <button type="button" class="bg-lrg-accent hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="contact">
+                    Start Your Project
+                </button>
+            </div>
+        </section>
+
+
+        <!-- PROJECTS PAGE -->
+        <section id="page-projects" class="page-content hidden" data-title="Projects Page">
+            <h1 class="text-5xl font-extrabold text-lrg-primary mb-6">Delivering Excellence Across Liberia.</h1>
+            <p class="text-xl text-gray-600 mb-10">Our portfolio reflects a decade of dedication to quality, innovation, and impact. We’ve partnered with government agencies, international organizations, and private clients to shape Liberia’s built environment.</p>
+
+            <!-- 
+            =================================================
+            IMPROVEMENT: Added JavaScript-powered filter bar
+            =================================================
+            -->
+            <div id="project-filters" class="flex flex-wrap justify-center gap-2 md:gap-4 mb-10">
+                <button class="project-filter-btn active font-semibold py-2 px-5 rounded-full bg-white shadow-md border" data-filter="all">Show All</button>
+                <button class="project-filter-btn font-semibold py-2 px-5 rounded-full bg-white shadow-md border" data-filter="road">Roads & Infrastructure</button>
+                <button class="project-filter-btn font-semibold py-2 px-5 rounded-full bg-white shadow-md border" data-filter="building">Buildings & Renovation</button>
+                <button class="project-filter-btn font-semibold py-2 px-5 rounded-full bg-white shadow-md border" data-filter="water">Water & Utilities</button>
+                <button class="project-filter-btn font-semibold py-2 px-5 rounded-full bg-white shadow-md border" data-filter="video">Video Features</button>
+            </div>
+
+
+            <h2 class="text-4xl font-bold text-center text-lrg-primary mb-12 border-b-2 border-lrg-accent pb-4">Featured Projects Gallery & Media</h2>
+
+            <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- 1. Monrovia Drainage Repairs -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="video water">
+                    <div class="w-full h-48 flex items-center justify-center bg-gray-800 text-white p-4">
+                        <svg class="w-12 h-12 text-lrg-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H6zm0 16v-4.5c0-.276.224-.5.5-.5h11c.276 0 .5.224.5.5V19H6zm1.5-6h9c.276 0 .5-.224.5-.5V6c0-.276-.224-.5-.5-.5h-9c-.276 0-.5.224-.5.5v6.5c0 .276.224.5.5.5zM12 9a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                        <p class="ml-3 font-semibold">Drainage System Rehabilitation</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Monrovia Drainage Repairs</h3>
+                        <p class="text-gray-600 text-sm mb-4">Comprehensive drainage system overhaul in central Monrovia</p>
+                        <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Project Video</span>
+                    </div>
+                </div>
+
+                <!-- 2. EMUS Road Rehabilitation -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="video road">
+                    <div class="w-full h-48 flex items-center justify-center bg-gray-800 text-white p-4">
+                        <svg class="w-12 h-12 text-lrg-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H6zm0 16v-4.5c0-.276.224-.5.5-.5h11c.276 0 .5.224.5.5V19H6zm1.5-6h9c.276 0 .5-.224.5-.5V6c0-.276-.224-.5-.5-.5h-9c-.276 0-.5.224-.5.5v6.5c0 .276.224.5.5.5zM12 9a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                        <p class="ml-3 font-semibold">Road Rehabilitation Process</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Faimah/Stockton Creek Roads</h3>
+                        <p class="text-gray-600 text-sm mb-4">World Bank-funded infrastructure renewal project</p>
+                        <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Time-lapse Video</span>
+                    </div>
+                </div>
+
+                <!-- 3. CLUS Access Road -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="video road">
+                    <div class="w-full h-48 flex items-center justify-center bg-gray-800 text-white p-4">
+                        <svg class="w-12 h-12 text-lrg-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H6zm0 16v-4.5c0-.276.224-.5.5-.5h11c.276 0 .5.224.5.5V19H6zm1.5-6h9c.276 0 .5-.224.5-.5V6c0-.276-.224-.5-.5-.5h-9c-.276 0-.5.224-.5.5v6.5c0 .276.224.5.5.5zM12 9a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                        <p class="ml-3 font-semibold">Road Construction Documentary</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Whien Town Access Road</h3>
+                        <p class="text-gray-600 text-sm mb-4">New access road construction under CLUS Project</p>
+                        <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Project Video</span>
+                    </div>
+                </div>
+
+                <!-- 4. Road Network Analysis -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="video road">
+                    <div class="w-full h-48 flex items-center justify-center bg-gray-800 text-white p-4">
+                        <svg class="w-12 h-12 text-lrg-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H6zm0 16v-4.5c0-.276.224-.5.5-.5h11c.276 0 .5.224.5.5V19H6zm1.5-6h9c.276 0 .5-.224.5-.5V6c0-.276-.224-.5-.5-.5h-9c-.276 0-.5.224-.5.5v6.5c0 .276.224.5.5.5zM12 9a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                        <p class="ml-3 font-semibold">Road Analysis Techniques</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">National Road Network Project</h3>
+                        <p class="text-gray-600 text-sm mb-4">Advanced pavement analysis using FWD technology</p>
+                        <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Technical Video</span>
+                    </div>
+                </div>
+
+                <!-- 5. EU Sewage Repair -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="video water">
+                    <div class="w-full h-48 flex items-center justify-center bg-gray-800 text-white p-4">
+                        <svg class="w-12 h-12 text-lrg-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H6zm0 16v-4.5c0-.276.224-.5.5-.5h11c.276 0 .5.224.5.5V19H6zm1.5-6h9c.276 0 .5-.224.5-.5V6c0-.276-.224-.5-.5-.5h-9c-.276 0-.5.224-.5.5v6.5c0 .276.224.5.5.5zM12 9a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                        <p class="ml-3 font-semibold">Sewage System Repair</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">EU Sewage Line Maintenance</h3>
+                        <p class="text-gray-600 text-sm mb-4">Emergency repair of critical sewage infrastructure</p>
+                        <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Process Video</span>
+                    </div>
+                </div>
+
+                <!-- 6. Road User Surveys -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="video road">
+                    <div class="w-full h-48 flex items-center justify-center bg-gray-800 text-white p-4">
+                        <svg class="w-12 h-12 text-lrg-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H6zm0 16v-4.5c0-.276.224-.5.5-.5h11c.276 0 .5.224.5.5V19H6zm1.5-6h9c.276 0 .5-.224.5-.5V6c0-.276-.224-.5-.5-.5h-9c-.276 0-.5.224-.5.5v6.5c0 .276.224.5.5.5zM12 9a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                        <p class="ml-3 font-semibold">Transportation Research</p>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">National Road User Study</h3>
+                        <p class="text-gray-600 text-sm mb-4">Comprehensive traffic pattern analysis nationwide</p>
+                        <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Documentary</span>
+                    </div>
+                </div>
+
+                <!-- 7. AFL Water Facility -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="water">
+                    <img src="https://placehold.co/600x400/003366/ffffff?text=AFL+Water+Facility" alt="AFL Water Facility" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/003366/ffffff?text=AFL+Water+Facility';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Military Water Infrastructure</h3>
+                        <p class="text-gray-600 text-sm mb-4">Todee Barracks water system installation</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed 2021</span>
+                    </div>
+                </div>
+
+                <!-- 8. FRESH AQUA Facility -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="water">
+                    <img src="https://placehold.co/600x400/4CAF50/ffffff?text=FRESH+AQUA+Plant" alt="FRESH AQUA Plant" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/4CAF50/ffffff?text=FRESH+AQUA+Plant';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Community Water System</h3>
+                        <p class="text-gray-600 text-sm mb-4">A.B Tolbert Road water infrastructure project</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed 2022</span>
+                    </div>
+                </div>
+
+                <!-- 9. Ford Showroom -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="building">
+                    <img src="https://placehold.co/600x400/CF1822/ffffff?text=Ford+Showroom" alt="Ford Showroom" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/CF1822/ffffff?text=Ford+Showroom';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Automotive Showroom</h3>
+                        <p class="text-gray-600 text-sm mb-4">Bushrod Island commercial construction</p>
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Ongoing</span>
+                    </div>
+                </div>
+
+                <!-- 10. Garsaw Residence -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="building">
+                    <img src="https://placehold.co/600x400/333333/FFFFFF?text=Modern+Residence" alt="Modern residential complex design" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/333333/FFFFFF?text=Modern+Residence';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Luxury Residential Build</h3>
+                        <p class="text-gray-600 text-sm mb-4">Contemporary home design & construction</p>
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Ongoing</span>
+                    </div>
+                </div>
+
+                <!-- 11. Bouconja Complex -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="building">
+                    <img src="https://placehold.co/600x400/9C27B0/ffffff?text=6-Complex+Buildings" alt="Multi-unit residential complex" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/9C27B0/ffffff?text=6-Complex+Buildings';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Multi-Unit Residential</h3>
+                        <p class="text-gray-600 text-sm mb-4">GSA Road apartment complex development</p>
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Ongoing</span>
+                    </div>
+                </div>
+
+                <!-- 12. GIZ Office Renovation -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="building">
+                    <img src="https://placehold.co/600x400/795548/FFFFFF?text=Diplomatic+Facility" alt="Diplomatic facility upgrade" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/795548/FFFFFF?text=Diplomatic+Facility';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Diplomatic Facility Upgrade</h3>
+                        <p class="text-gray-600 text-sm mb-4">Mamba Point office modernization</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed 2023</span>
+                    </div>
+                </div>
+                
+                <!-- 13. Ministry of Public Works - Drainage -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="water">
+                    <img src="https://placehold.co/600x400/673AB7/ffffff?text=Drainage+Repairs" alt="Urban drainage repairs" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/673AB7/ffffff?text=Drainage+Repairs';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Urban Drainage Overhaul</h3>
+                        <p class="text-gray-600 text-sm mb-4">Comprehensive drainage system rehabilitation</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                </div>
+
+                <!-- 14. Ministry of Public Works - Road Maintenance -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="road">
+                    <img src="https://placehold.co/600x400/FF5722/FFFFFF?text=Road+Maintenance" alt="Urban road maintenance" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/FF5722/FFFFFF?text=Road+Maintenance';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Urban Road Maintenance</h3>
+                        <p class="text-gray-600 text-sm mb-4">7.5km of neighborhood road repairs</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                </div>
+
+                <!-- 15. Board of Tax Appeal Renovation -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="building">
+                    <img src="https://placehold.co/600x400/2196F3/ffffff?text=Tax+Board+Renovation" alt="Tax board renovation" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/2196F3/ffffff?text=Tax+Board+Renovation';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Tax Board Facility Upgrade</h3>
+                        <p class="text-gray-600 text-sm mb-4">Civil and interior renovation works</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                </div>
+
+                <!-- 16. MCC Road Network Project -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="road">
+                    <img src="https_placehold.co/600x400/009688/FFFFFF?text=Geotechnical+Survey" alt="Geotechnical and topographic survey" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/009688/FFFFFF?text=Geotechnical+Survey';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">National Road Network Analysis</h3>
+                        <p class="text-gray-600 text-sm mb-4">Comprehensive data collection and assessment</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                </div>
+
+                <!-- 17. MCC Road User Surveys -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="road">
+                    <img src="https.placehold.co/600x400/607D8B/FFFFFF?text=Road+User+Survey" alt="Road user survey fieldwork" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/607D8B/FFFFFF?text=Road+User+Survey';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Nationwide Road User Study</h3>
+                        <p class="text-gray-600 text-sm mb-4">Detailed traffic pattern and usage analysis</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                </div>
+
+                <!-- 18. CLUS Access Road -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="road">
+                    <img src="https.placehold.co/600x400/03A9F4/FFFFFF?text=CLUS+Access+Road" alt="CLUS Project Access Road" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/03A9F4/FFFFFF?text=CLUS+Access+Road';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">CLUS Project Access Road</h3>
+                        <p class="text-gray-600 text-sm mb-4">New road construction in Whien Town</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                </div>
+
+                <!-- 19. WHI Water Tower -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="water">
+                    <img src="https.placehold.co/600x400/4CAF50/FFFFFF?text=Water+Tower" alt="AFL Todee Barracks Water Facility" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/4CAF50/FFFFFF?text=Water+Tower';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Community Water Tower</h3>
+                        <p class="text-gray-600 text-sm mb-4">Reinforced concrete water tower construction</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                </div>
+
+                <!-- 20. Lonestar MTN Office -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="building">
+                    <img src="https://placehold.co/600x400/FFC107/ffffff?text=MTN+Office" alt="Lonestar MTN Office" class="w-full h-48 object-cover" onerror="this.src='https:placehold.co/600x400/FFC107/ffffff?text=MTN+Office';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Telecom Office Facility</h3>
+                        <p class="text-gray-600 text-sm mb-4">New mobile money branch construction</p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Completed</span>
+                    </div>
+                </div>
+
+                <!-- 21. Liberia Senate Renovation -->
+                <div class="project-card bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-accent group transform hover:scale-[1.02] transition duration-300" data-category="building">
+                    <img src="https_placehold.co/600x400/E91E63/FFFFFF?text=Legislative+Upgrade" alt="Legislative Facility Upgrade" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/600x400/E91E63/FFFFFF?text=Legislative+Upgrade';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2">Legislative Facility Upgrade</h3>
+                        <p class="text-gray-600 text-sm mb-4">Ongoing renovation and maintenance works</p>
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">Ongoing</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Testimonials -->
+            <div class="my-16">
+                <h2 class="text-3xl font-bold text-center text-lrg-primary mb-8">What Our Clients Say</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- IMPROVEMENT: Replaced 'X' SVG with a quote icon -->
+                    <div class="bg-white p-8 rounded-xl shadow-xl border-t-4 border-lrg-accent relative">
+                        <svg class="w-16 h-16 text-gray-200 absolute -top-4 left-4 opacity-70" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                        <p class="italic text-gray-700 mb-4 text-lg relative z-10">“LRG delivered our water facility ahead of schedule and with exceptional quality.”</p>
+                        <p class="font-semibold text-right text-lrg-primary">— Col. Theophilus Dana</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-xl border-t-4 border-lrg-accent relative">
+                        <svg class="w-16 h-16 text-gray-200 absolute -top-4 left-4 opacity-70" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                        <p class="italic text-gray-700 mb-4 text-lg relative z-10">“Their professionalism and attention to detail made our showroom project seamless.”</p>
+                        <p class="font-semibold text-right text-lrg-primary">— George Haddad</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final CTA -->
+            <div class="text-center mt-12 space-y-3 sm:space-y-0 sm:space-x-4">
+                <button type="button" class="w-full sm:w-auto bg-lrg-primary hover:bg-blue-900 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="services">
+                    Explore Our Services
+                </button>
+                <button type="button" class="w-full sm:w-auto bg-lrg-accent hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 transform hover:scale-105" data-page="contact">
+                    Contact Us
+                </button>
+            </div>
+        </section>
+
+        <!-- TEAM & EQUIPMENT PAGE -->
+        <section id="page-team" class="page-content hidden" data-title="Team & Equipment Page">
+            <h1 class="text-5xl font-extrabold text-lrg-primary mb-6">Meet the Minds and Machines Behind Our Success.</h1>
+            <p class="text-xl text-gray-600 mb-10">LRG Inc. is powered by a multidisciplinary team of certified professionals and technical experts. Our leadership combines academic excellence with field experience to ensure every project meets the highest standards.</p>
+            
+            <!-- CEO PROFILE SECTION -->
+            <section id="ceo-profile" class="py-16 bg-gray-50 border-t border-b rounded-xl shadow-inner">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <span class="block text-lrg-accent text-sm font-semibold uppercase tracking-wider mb-2">Leadership</span>
+                        <h2 class="text-4xl font-bold text-gray-900">President & CEO Profile</h2>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-2xl max-w-5xl mx-auto">
+                        <div class="md:flex md:items-start md:space-x-8">
+                            <!-- Profile Header -->
+                            <div class="md:w-1/3 flex flex-col items-center text-center mb-6 md:mb-0">
+                                <img src="https://placehold.co/144x144/00205B/FFFFFF?text=GDB" alt="G. Delino Bryant - President/CEO" class="rounded-full w-36 h-36 object-cover ring-4 ring-lrg-primary ring-offset-4 mb-4" onerror="this.src='https://placehold.co/144x144/00205B/FFFFFF?text=GDB';">
+                                <h3 class="text-2xl font-bold text-gray-900">George Delino Bryant,Sr</h3>
+                                <p class="text-lg font-medium text-lrg-primary">President / CEO</p>
+                                <p class="text-md text-gray-600">Civil Engineer, EMBA</p>
+                            </div>
+                            
+                            <!-- Profile Details -->
+                            <div class="md:w-2/3 text-gray-700 space-y-4">
+                                <p class="text-lg font-semibold mb-3 border-b pb-2">About Mr. Bryant:</p>
+                                <p>Mr. Bryant is an **Infrastructure Engineer** and **Procurement and Supply Chain expert** with 14 years of comprehensive work experience.</p>
+                                <p>His expertise has been leveraged by various international organizations, including the UNDP Liberia, UN-HABITAT, UNMI, ODEBRECTH, GIZ, and Booz Allen Hamilton (BAH USA).</p>
+                                <p>He possesses extensive experience in project management for multi-faceted construction projects, including detailed engineering, highway feasibility studies, maintenance, and construction.</p>
+                                <p class="italic">Mr. Bryant further enhanced his professional qualifications by attending the **Senior Road Executive Programme at Birmingham University** in 2015 and 2018.</p>
+                                <p class="font-semibold mt-4">He is a **Registered Engineer** and a former Executive Member of the Engineering Society of Liberia.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- 
+                =================================================
+                IMPROVEMENT: Re-styled team list into cleaner cards
+                =================================================
+                -->
+                <!-- Our Team -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-t-8 border-lrg-primary">
+                    <h2 class="text-3xl font-bold text-lrg-accent mb-6">Key Personnel</h2>
+                    <ul class="space-y-4">
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-lrg-accent">
+                            <span class="font-bold text-lrg-primary">G. Delino Bryant</span><br>
+                            <span class="text-sm text-gray-600">President/CEO, Civil Engineer, EMBA</span>
+                        </li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-lrg-accent">
+                            <span class="font-bold text-lrg-primary">Ahmadu W. Jalloh</span><br>
+                            <span class="text-sm text-gray-600">Technical Manager, MSc Civil Engineering</span>
+                        </li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-lrg-accent">
+                            <span class="font-bold text-lrg-primary">Hassan Johnson</span><br>
+                            <span class="text-sm text-gray-600">Technical Manager, BSc Civil Engineering</span>
+                        </li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-lrg-accent">
+                            <span class="font-bold text-lrg-primary">George Wesley</span><br>
+                            <span class="text-sm text-gray-600">Site Engineer, BSc Civil Engineering</span>
+                        </li>
+                        <li class="p-4 bg-gray-50 rounded-lg border-l-4 border-lrg-accent">
+                            <span class="font-bold text-lrg-primary">Theresa Entsua</span><br>
+                            <span class="text-sm text-gray-600">Head Of Admin/Accountant, BBA Accounting</span>
+                        </li>
+                    </ul>
+
+                    <h3 class="text-2xl font-bold text-lrg-primary mt-8 mb-4">Support Staff</h3>
+                    <div class="grid grid-cols-2 gap-4 text-gray-600">
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Architects</li>
+                            <li>Environmentalists</li>
+                            <li>Geotechnical Engineers</li>
+                            <li>Electrical Engineers</li>
+                        </ul>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Quantity Surveyors</li>
+                            <li>Draftsmen</li>
+                            <li>Procurement Officers</li>
+                            <li>Warehouse Officers</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 
+                =================================================
+                IMPROVEMENT: Re-styled equipment list into cards
+                =================================================
+                -->
+                <!-- Equipment Inventory -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-t-8 border-lrg-primary">
+                    <h2 class="text-3xl font-bold text-lrg-accent mb-6">Our Equipment Inventory</h2>
+                    <div class="space-y-6">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="font-bold text-lg text-lrg-primary border-b pb-2">Logistics & Heavy Machinery:</p>
+                            <ul class="list-disc list-inside space-y-2 ml-4 mt-2 text-gray-700">
+                                <li>3 SUVs, 1 Kia Sportage Jeep, 1 Ford Ranger Pickup</li>
+                                <li>1 Kia Truck, 2 Mac Trucks</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="font-bold text-lg text-lrg-primary border-b pb-2">Construction & Survey Tools:</p>
+                            <ul class="list-disc list-inside space-y-2 ml-4 mt-2 text-gray-700">
+                                <li>Deep water pump machines, Culvert molds</li>
+                                <li>Concrete mixers and surveying tools</li>
+                            </ul>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="font-bold text-lg text-lrg-primary border-b pb-2">Office & Technology:</p>
+                            <ul class="list-disc list-inside space-y-2 ml-4 mt-2 text-gray-700">
+                                <li>7 Dell laptops, 3 HP printers</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p class="mt-8 text-lrg-primary font-semibold text-lg bg-blue-50 p-4 rounded-lg">
+                        Why It Matters: Our team and equipment ensure we can mobilize quickly, work efficiently, and deliver reliably.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEWS & INSIGHTS PAGE -->
+        <section id="page-news" class="page-content hidden" data-title="News & Insights Page">
+            <!-- Header -->
+            <h1 class="text-5xl font-extrabold text-lrg-primary mb-6 text-center">News & Insights</h1>
+            <p class="text-xl text-gray-600 mb-12 text-center max-w-3xl mx-auto">
+                Stay up-to-date with our latest projects, community initiatives, and press releases across all our sectors.
+            </p>
+
+            <!-- Featured News Carousel (Slideshow Format) -->
+            <div class="featured-news-carousel relative mb-12">
+                <div id="featuredNewsCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+                    <div class="carousel-inner">
+                        
+                        <!-- Slide 1: ACTIVE -->
+                        <div class="carousel-item active">
+                            <div class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-accent">
+                                <div class="grid grid-cols-1 md:grid-cols-2">
+                                    <div class="md:order-2">
+                                        <img src="https://placehold.co/600x400/00205B/FFFFFF?text=News+1" alt="Featured News 1" class="w-full h-full object-cover min-h-[300px]" onerror="this.src='https://placehold.co/600x400/00205B/FFFFFF?text=News+1';">
+                                    </div>
+                                    <div class="p-8">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Tourism Development</span>
+                                            <time class="text-sm text-gray-500">November 2025</time>
+                                        </div>
+                                        <h3 class="text-3xl font-bold text-lrg-primary mb-4">Gov't Kicks Off Tourism Development Projects Under AAID FY2025</h3>
+                                        <p class="mb-4 text-gray-700">
+                                            The Ministry of Information, Cultural Affairs, and Tourism (MICAT), launched several milestone tourism projects...
+                                        </p>
+                                        <div class="mt-6 pt-4 border-t border-gray-200">
+                                            <a href="https://www.liberianobserver.com/business/gov-t-kicks-off-tourism-development-projects-under-aaid-fy2025/article_d874586c-5c26-4df7-8874-446da9a72545.html" 
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                                Read Full Article
+                                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Inactive -->
+                        <div class="carousel-item">
+                            <div class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-primary">
+                                <div class="grid grid-cols-1 md:grid-cols-2">
+                                    <div class="md:order-2">
+                                        <img src="https://placehold.co/600x400/CF1822/FFFFFF?text=News+2" alt="Featured News 2" class="w-full h-full object-cover min-h-[300px]" onerror="this.src='https://placehold.co/600x400/CF1822/FFFFFF?text=News+2';">
+                                    </div>
+                                    <div class="p-8">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <span class="inline-block bg-lrg-accent text-white text-xs font-semibold px-3 py-1 rounded-full">New Infrastructure</span>
+                                            <time class="text-sm text-gray-500">October 2025</time>
+                                        </div>
+                                        <h3 class="text-3xl font-bold text-lrg-primary mb-4">LRG Secures $500M Loan for Power Generation Project</h3>
+                                        <p class="mb-4 text-gray-700">
+                                            A major funding milestone has been reached, enabling the development of a large-scale solar power farm in the Eastern region.
+                                        </p>
+                                        <div class="mt-6 pt-4 border-t border-gray-200">
+                                            <a href="#" class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                                View Press Release
+                                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Carousel Controls -->
+                    <button class="carousel-control-prev absolute top-1/2 left-0 md:-left-4 transform -translate-y-1/2 text-white bg-lrg-primary bg-opacity-70 p-2 rounded-full hover:bg-lrg-accent transition duration-150" type="button" data-bs-target="#featuredNewsCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next absolute top-1/2 right-0 md:-right-4 transform -translate-y-1/2 text-white bg-lrg-primary bg-opacity-70 p-2 rounded-full hover:bg-lrg-accent transition duration-150" type="button" data-bs-target="#featuredNewsCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- News Articles - 3-column Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- YouTube Video Highlight Card -->
+                <article class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-accent group hover:shadow-2xl transition duration-300"> 
+                    <div class="relative pt-[56.25%]"> <!-- 16:9 Aspect Ratio -->
+                        <iframe class="absolute top-0 left-0 w-full h-full"
+                                src="https://www.youtube.com/embed/XOuA-8PWCM0?si=2qNtpdDpfCt_X4kK"
+                                title="LRG CEO Interview"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="inline-block bg-lrg-accent text-white text-xs font-semibold px-3 py-1 rounded-full">Video Update</span>
+                            <time class="text-sm text-gray-500">November 2025</time>
+                        </div>
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2 group-hover:text-lrg-accent transition duration-150">Watch: LRG's CEO on Infrastructure Development</h3>
+                        <p class="text-gray-700 text-sm mb-4">A short message from our leadership detailing the progress of the national road network overhaul.</p>
+                        <div class="pt-3 border-t border-gray-200">
+                            <a href="https://www.youtube.com/watch?v=XOuA-8PWCM0" target="_blank" rel="noopener noreferrer"
+                                class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                Open Video Link
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- News Article 1 -->
+                <article class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-primary group hover:shadow-2xl transition duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Project Updates</span>
+                            <time class="text-sm text-gray-500">October 2025</time>
+                        </div>
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2 group-hover:text-lrg-accent transition duration-150">LRG Completes Major Road Rehabilitation Project</h3>
+                        <p class="text-gray-700 text-sm mb-4">
+                            LRG Inc. has successfully completed a comprehensive road rehabilitation project, improving critical infrastructure...
+                        </p>
+                        <div class="pt-3 border-t border-gray-200">
+                            <a href="#" class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                Read More
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Placeholder Article 3 -->
+                <article class="bg-white rounded-xl shadow-xl overflow-hidden border-l-8 border-lrg-primary group hover:shadow-2xl transition duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="inline-block bg-lrg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">Community</span>
+                            <time class="text-sm text-gray-500">September 2025</time>
+                        </div>
+                        <h3 class="text-xl font-bold text-lrg-primary mb-2 group-hover:text-lrg-accent transition duration-150">Scholarship Program Announced for Local Students</h3>
+                        <p class="text-gray-700 text-sm mb-4">As part of our commitment to Liberia's future, LRG is launching a new education fund for local universities.</p>
+                        <div class="pt-3 border-t border-gray-200">
+                            <a href="#" class="inline-flex items-center text-lrg-accent hover:text-lrg-primary font-semibold transition duration-150">
+                                Read More
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div> 
+
+            <!-- Multi-Media Feature Block -->
+            <div class="my-12 py-8 bg-gray-50 rounded-xl shadow-inner overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center px-8">
+                    <!-- Text Column -->
+                    <div class="lg:col-span-1">
+                        <span class="inline-block text-sm font-semibold text-lrg-accent mb-2">Project Media</span>
+                        <h3 class="text-3xl font-bold text-lrg-primary mb-4">Project Spotlight: Road Rehab Progress</h3>
+                        <p class="text-gray-700 mb-6">
+                            See the before-and-after transformation of critical infrastructure in Monrovia.
+                        </p>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#galleryModal" class="btn-gallery" aria-label="Launch full photo gallery">
+                            Launch Full Photo Gallery
+                        </button>
+                    </div>
+
+                    <!-- Slideshow Column -->
+                    <div class="lg:col-span-2">
+                        <div class="relative rounded-lg overflow-hidden shadow-2xl border-4 border-white">
+                            <img src="https.placehold.co/600x400/607D8B/FFFFFF?text=Road+Progress" alt="Road Rehabilitation Project Image" class="w-full h-auto object-cover max-h-[450px]" onerror="this.src='https.placehold.co/600x400/607D8B/FFFFFF?text=Road+Progress';">
+                            <div class="absolute bottom-0 left-0 bg-lrg-primary bg-opacity-80 text-white p-3 w-full text-center text-sm font-medium">
+                                Phase 2 Completion: View of the new asphalt and drainage installation.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="text-center mt-12">
+                <button class="btn-load" aria-label="Load more articles">
+                    Load More Articles
+                </button>
+            </div>
+        </section>
+
+        <!-- CONTACT US PAGE -->
+        <section id="page-contact" class="page-content hidden" data-title="Contact Us Page">
+            <h1 class="text-5xl font-extrabold text-lrg-primary mb-6">Let’s Build Something Great Together.</h1>
+            <p class="text-xl text-gray-600 mb-10">We're ready to discuss your next project in Liberia. Reach out to the LRG team today.</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-white p-8 rounded-xl shadow-xl border-t-4 border-lrg-accent">
+                    <h2 class="text-3xl font-bold text-lrg-primary mb-6">Send Us a Message</h2>
+                    <form id="contact-form" class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                            <input type="text" id="name" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-lrg-primary focus:ring-lrg-primary">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-lrg-primary focus:ring-lrg-primary">
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                            <input type="tel" id="phone" name="phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-lrg-primary focus:ring-lrg-primary">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                            <textarea id="message" name="message" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 border focus:border-lrg-primary focus:ring-lrg-primary"></textarea>
+                        </div>
+                        <button type="submit" class="bg-lrg-primary hover:bg-blue-900 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 w-full transform hover:scale-105">
+                            Submit Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Details -->
+                <div class="space-y-8">
+                    <!-- Address & Hours -->
+                    <div class="bg-gray-100 p-8 rounded-xl shadow-xl">
+                        <h2 class="text-3xl font-bold text-lrg-primary mb-4">Office & Hours</h2>
+                        <div class="space-y-3">
+                            <p class="text-lg font-semibold text-gray-700">📍 Office Address:</p>
+                            <p class="ml-4 text-gray-600">
+                                1st Apt B-5, Baker’s Compound<br>
+                                9th Street Sinkor, Opposite Former SHA-Town- Bar<br>
+                                Monrovia, Liberia
+                            </p>
+                            
+                            <p class="text-lg font-semibold text-gray-700 pt-3">⏱ Business Hours:</p>
+                            <p class="ml-4 text-gray-600">Monday–Friday: <span class="font-medium">8:00 AM – 5:00 PM</span><br>Saturday: <span class="font-medium">9:00 AM – 1:00 PM</span><br>Sunday: <span class="font-medium">Closed</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Phone & Email -->
+                    <div class="bg-gray-100 p-8 rounded-xl shadow-xl">
+                        <h2 class="text-3xl font-bold text-lrg-primary mb-4">Contact Details</h2>
+                        
+                        <p class="text-lg font-semibold text-gray-700 mb-2">📞 Phone Numbers:</p>
+                        <ul class="ml-4 space-y-1 text-gray-600">
+                            <li><a href="tel:+231886535025" class="font-mono hover:text-lrg-accent">+231 886 535 025</a></li>
+                            <li><a href="tel:+231880607000" class="font-mono hover:text-lrg-accent">+231 880 607 000</a></li>
+                            <li><a href="tel:+231777535025" class="font-mono hover:text-lrg-accent">+231 777 535 025</a></li>
+                        </ul>
+                        <p class="text-lg font-semibold text-gray-700 mt-4 mb-2">📧 Email:</p>
+                        <p class="ml-4 text-gray-600 font-mono break-words"><a href="mailto:construct.liberia@gmail.com" class="hover:text-lrg-accent">construct.liberia@gmail.com</a></p>
+                        <p class="ml-4 text-gray-600 font-mono break-words"><a href="mailto:liberiarenaissancegroup@gmail.com" class="hover:text-lrg-accent">liberiarenaissancegroup@gmail.com</a></p>
+
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-gray-700">Follow Us:</h3>
+                            <div class="flex flex-wrap gap-3 mt-3">
+                                <a href="https://web.facebook.com/profile.php?id=61583502135732&sk=about" target="_blank" rel="noopener noreferrer" class="social-btn social-fb" aria-label="LRG on Facebook">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24h11.458v-8.397H9.761V12.16h3.022V9.45c0-3.007 1.794-4.668 4.532-4.668 1.309 0 2.428.232 2.753.334v3.189h-1.898c-1.492 0-1.782.71-1.782 1.75v2.305h3.551l-.462 3.585h-3.089V24h6.113c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg>
+                                    <span>Facebook</span>
+                                </a>
+                                <a href="https://youtube.com/@liberiarenaissancegroup?si=MVfhBiJsRRNGsNrZ" target="_blank" rel="noopener noreferrer" class="social-btn social-yt" aria-label="LRG on YouTube">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.01 3.01 0 00-2.12-2.13C19.793 3.5 12 3.5 12 3.5s-7.793 0-9.378.556A3.01 3.01 0 00.502 6.186 31.13 31.13 0 000 12a31.13 31.13 0 00.502 5.814 3.01 3.01 0 002.12 2.13C4.207 20.5 12 20.5 12 20.5s7.793 0 9.378-.556a3.01 3.01 0 002.12-2.13A31.13 31.13 0 0024 12a31.13 31.13 0 00-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                                    <span>YouTube</span>
+                                </a>
+                                <a href="https://www.linkedin.com/in/liberia-renaissance-construction-company-94303b140/" target="_blank" rel="noopener noreferrer" class="social-btn social-ln" aria-label="LRG on LinkedIn">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.629c0-1.336-.023-3.054-1.852-3.054-1.853 0-2.136 1.445-2.136 2.964v5.719h-3.553V9.091h3.414v1.562h.046c.477-.9 1.637-1.852 3.37-1.852 3.606 0 4.275 2.365 4.275 5.452v6.237zM5.044 7.214h-.022C3.847 7.214 3 6.31 3 5.309 3 4.305 3.824 3.4 5.044 3.4c1.222 0 2.01 0.905 2.032 1.903.023 1.006-.798 1.908-2.032 1.908zm-1.758 13.238H6.8V9.091H3.286v11.361zM22.22 1H1.78C1.35 1 1 1.35 1 1.78v20.44C1 22.65 1.35 23 1.78 23h20.44c.43 0 .78-.35.78-.78V1.78c0-.43-.35-.78-.78-.78z"/></svg>
+                                    <span>LinkedIn</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Map Location Embed -->
+            <div class="mt-12 bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-lrg-primary">
+                <h2 class="text-3xl font-bold text-lrg-primary p-6 pb-0">Find Our Location</h2>
+                <div class="map-aspect"> 
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d495.718948654608!2d-10.784221176931855!3d6.296339996927186!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xf09f9006bff35b1%3A0x933def8a6d15168f!2sLiberia%20Renaissance%20Group%20(LRG%20Inc.)!5e0!3m2!1sen!2sus!4v1759853594067!5m2!1sen!2sus" 
+                        class="absolute top-0 left-0 w-full h-full" 
+                        title="LRG Inc. office location map"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+                <p class="p-6 text-gray-600 text-sm">
+                    **Note on Location:** Our office is located on the 1st floor of Apt B-5 in Baker’s Compound, 9th Street Sinkor, opposite the former SHA-Town Bar.
+                </p>
+            </div>
+        </section>
+
+        <!-- Custom Message Box for Form Submission -->
+        <div id="message-box" class="fixed top-5 left-0 right-0 z-[100] p-4 hidden" aria-hidden="true" style="transition: all 0.3s ease;">
+            <div class="max-w-md mx-auto bg-green-500 text-white p-4 rounded-lg shadow-xl flex justify-between items-center">
+                <p id="message-text" role="status" aria-live="polite">Success!</p>
+                <button id="message-close-btn" class="text-white font-bold text-xl ml-4" data-close>&times;</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-lrg-primary text-white mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 border-b border-blue-800 pb-8">
+                <!-- LRG Info -->
+                <div>
+                    <h4 class="text-2xl font-extrabold text-lrg-accent mb-3">LRG Inc.</h4>
+                    <p class="text-sm font-light text-gray-300">Engineering Liberia’s Future — One Project at a Time.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-3">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" data-page="services" class="text-gray-300 hover:text-lrg-accent transition duration-150">Services Portfolio</a></li>
+                        <li><a href="#" data-page="projects" class="text-gray-300 hover:text-lrg-accent transition duration-150">Client Projects</a></li>
+                        <li><a href="#" data-page="about" class="text-gray-300 hover:text-lrg-accent transition duration-150">Our Company</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-3">Get in Touch</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="tel:+231777535025" class="hover:text-lrg-accent transition duration-150">P: +231 777 535 025</a></li>
+                        <li><a href="tel:+231880607000" class="hover:text-lrg-accent transition duration-150">P: +231 880 607 000</a></li>
+                        <li><a href="mailto:construct.liberia@gmail.com" class="hover:text-lrg-accent transition duration-150 break-words">E: construct.liberia@gmail.com</a></li>
+                        <li><a href="mailto:liberiarenaissancegroup@gmail.com" class="hover:text-lrg-accent transition duration-150 break-words">E: liberiarenaissancegroup@gmail.com</a></li>
+                        <li>9th Street Sinkor, Monrovia, Liberia</li>
+                    </ul>
+                </div>
+
+                <!-- Connect -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-3">Connect</h4>
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <a href="https://web.facebook.com/profile.php?id=61583502135732&sk=about" target="_blank" rel="noopener noreferrer" class="social-btn--sm social-fb" aria-label="LRG on Facebook">
+                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24h11.458v-8.397H9.761V12.16h3.022V9.45c0-3.007 1.794-4.668 4.532-4.668 1.309 0 2.428.232 2.753.334v3.189h-1.898c-1.492 0-1.782.71-1.782 1.75v2.305h3.551l-.462 3.585h-3.089V24h6.113c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0z"/></svg>
+                        </a>
+                        <a href="https://youtube.com/@liberiarenaissancegroup?si=MVfhBiJsRRNGsNrZ" target="_blank" rel="noopener noreferrer" class="social-btn--sm social-yt" aria-label="LRG on YouTube">
+                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.01 3.01 0 00-2.12-2.13C19.793 3.5 12 3.5 12 3.5s-7.793 0-9.378.556A3.01 3.01 0 00.502 6.186 31.13 31.13 0 000 12a31.13 31.13 0 00.502 5.814 3.01 3.01 0 002.12 2.13C4.207 20.5 12 20.5 12 20.5s7.793 0 9.378-.556a3.01 3.01 0 002.12-2.13A31.13 31.13 0 0024 12a31.13 31.13 0 00-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/liberia-renaissance-construction-company-94303b140/" target="_blank" rel="noopener noreferrer" class="social-btn--sm social-ln" aria-label="LRG on LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.629c0-1.336-.023-3.054-1.852-3.054-1.853 0-2.136 1.445-2.136 2.964v5.719h-3.553V9.091h3.414v1.562h.046c.477-.9 1.637-1.852 3.37-1.852 3.606 0 4.275 2.365 4.275 5.452v6.237zM5.044 7.214h-.022C3.847 7.214 3 6.31 3 5.309 3 4.305 3.824 3.4 5.044 3.4c1.222 0 2.01 0.905 2.032 1.903.023 1.006-.798 1.908-2.032 1.908zm-1.758 13.238H6.8V9.091H3.286v11.361zM22.22 1H1.78C1.35 1 1 1.35 1 1.78v20.44C1 22.65 1.35 23 1.78 23h20.44c.43 0 .78-.35.78-.78V1.78c0-.43-.35-.78-.78-.78z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center text-sm pt-8 mt-8 border-t border-blue-800">
+                &copy; <span id="current-year"></span> Liberia Renaissance Group (LRG Inc.). All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: Full Photo Gallery (Lightbox) -->
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content rounded-xl overflow-hidden">
+                <div class="modal-header bg-lrg-primary text-white border-b-2 border-lrg-accent">
+                    <h5 class="modal-title font-bold" id="galleryModalLabel">Project Spotlight: Road Rehab Gallery</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <!-- Inner Carousel for Gallery Images -->
+                    <div id="galleryCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://placehold.co/1200x800/00205B/FFFFFF?text=Gallery+1" class="d-block w-full" alt="Gallery Image 1" onerror="this.src='https://placehold.co/1200x800/00205B/FFFFFF?text=Gallery+1';">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>Phase I: Initial Site Assessment</h5>
+                                    <p>Checking existing infrastructure integrity.</p>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https.placehold.co/1200x800/CF1822/FFFFFF?text=Gallery+2" class="d-block w-full" alt="Gallery Image 2" onerror="this.src='https://placehold.co/1200x800/CF1822/FFFFFF?text=Gallery+2';">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>Active Construction: Drainage Installation</h5>
+                                    <p>Laying new subterranean drainage.</p>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https.placehold.co/1200x800/333333/FFFFFF?text=Gallery+3" class="d-block w-full" alt="Gallery Image 3" onerror="this.src='https://placehold.co/1200x800/333333/FFFFFF?text=Gallery+3';">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>Completion: New Pavement and Markings</h5>
+                                    <p>The final layer of asphalt and clear road markings.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gallery Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/+231880833840?text=Hello%20LRG%20Group!" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        aria-label="Chat with LRG on WhatsApp" 
+        class="fixed z-40 bottom-6 right-6 md:bottom-8 md:right-8 bg-whatsapp text-white p-4 rounded-full shadow-xl transition-all duration-300 ease-in-out whatsapp-pulse hover:scale-110 hover:shadow-2xl hover:bg-whatsapp-hover flex items-center justify-center">
+        
+        <!-- Using Phosphor icon -->
+        <i class="ph ph-whatsapp-logo text-3xl block" aria-hidden="true"></i>
+    </a>
+
+    <!-- Bootstrap JavaScript (Bundle with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 
+    =================================================
+    IMPROVEMENT: Inlined JavaScript for SPA navigation, 
+    project filtering, and other functions.
+    This replaces main.js and slider.js
+    =================================================
+    -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. SPA Navigation Logic ---
+            const allPages = document.querySelectorAll('.page-content');
+            const allNavLinks = document.querySelectorAll('.nav-link, .mobile-nav-link, [data-page]:not(.nav-link, .mobile-nav-link)');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+            function showPage(pageId) {
+                // Hide all pages
+                allPages.forEach(page => {
+                    page.classList.add('hidden');
+                });
+
+                // Show the target page
+                const targetPage = document.getElementById(`page-${pageId}`);
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
+                    // Update document title
+                    const title = targetPage.getAttribute('data-title') || 'LRG Inc.';
+                    document.title = `LRG Inc. | ${title}`;
+                } else {
+                    // Fallback to home
+                    document.getElementById('page-home').classList.remove('hidden');
+                    document.title = 'LRG Inc. | Home';
+                }
+
+                // Update active nav link
+                updateActiveNav(pageId);
+
+                // Close mobile menu
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+                if (mobileMenuBtn) mobileMenuBtn.setAttribute('aria-expanded', 'false');
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+
+            function updateActiveNav(pageId) {
+                document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-page') === pageId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            allNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('data-page');
+                    if (pageId) {
+                        showPage(pageId);
+                    }
+                });
+            });
+
+            // --- 2. Mobile Menu Toggle ---
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+                });
+            }
+
+            // --- 3. Project Filter Logic ---
+            const filterButtons = document.querySelectorAll('#project-filters .project-filter-btn');
+            const projectCards = document.querySelectorAll('#project-grid .project-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.getAttribute('data-filter');
+
+                    // Update button active state
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    // Filter cards
+                    projectCards.forEach(card => {
+                        const categories = card.getAttribute('data-category');
+                        if (filter === 'all' || categories.includes(filter)) {
+                            card.classList.remove('hidden');
+                            card.style.display = 'block'; // Ensure it's visible
+                        } else {
+                            card.classList.add('hidden');
+                            setTimeout(() => { // Hide after transition
+                                if (card.classList.contains('hidden')) {
+                                    card.style.display = 'none';
+                                }
+                            }, 300);
+                        }
+                    });
+                });
+            });
+
+            // --- 4. Contact Form Submission (Mock) ---
+            const contactForm = document.getElementById('contact-form');
+            const messageBox = document.getElementById('message-box');
+            const messageText = document.getElementById('message-text');
+            const messageCloseBtn = document.getElementById('message-close-btn');
+
+            if (contactForm && messageBox && messageText && messageCloseBtn) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // In a real app, you'd send this data to a server
+                    console.log('Form submitted');
+
+                    // Show success message
+                    messageText.textContent = 'Success! Your message has been sent.';
+                    messageBox.classList.remove('hidden');
+                    messageBox.style.opacity = '1';
+
+                    // Hide after 3 seconds
+                    setTimeout(() => {
+                        hideMessageBox();
+                    }, 3000);
+                });
+
+                function hideMessageBox() {
+                    messageBox.style.opacity = '0';
+                    setTimeout(() => {
+                        messageBox.classList.add('hidden');
+                    }, 300);
+                }
+
+                messageCloseBtn.addEventListener('click', hideMessageBox);
+            }
+
+            // --- 5. Footer Current Year ---
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // --- 6. Initial Page Load ---
+            // Show home page by default
+            showPage('home');
+
+        });
+    </script>
+
+</body>
+</html>
