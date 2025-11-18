@@ -124,13 +124,17 @@
   padding: 0.5rem 0.75rem;
   background: #ffffff;
   border-radius: 0.5rem;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(2,32,91,0.08); /* subtle LRG primary tint */
   box-shadow: 0 6px 18px rgba(2,6,23,0.06);
   text-decoration: none;
   transition: transform .16s ease, box-shadow .16s ease, background .12s ease;
 }
 .social-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 .social-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(2,6,23,0.12); }
+.social-btn:hover, .social-btn:focus {
+  background: linear-gradient(90deg, rgba(203,28,36,0.04), rgba(0,32,91,0.02));
+  border-color: #CF1822; /* lrg-accent on hover */
+}
 .social-btn:focus { outline: 3px solid rgba(99,102,241,0.18); outline-offset: 3px; }
 
 /* Variant for smaller icon-only buttons in footer */
@@ -142,3 +146,11 @@
 .social-yt { color: #FF0000; }
 .social-ig { color: #E4405F; }
 .social-ln { color: #0A66C2; }
+
+/* Text style inside the social button (label) */
+.social-btn > span { font-weight: 600; color: #00205B; }
+
+/* Hide labels on very small screens to reduce horizontal footprint */
+@media (max-width: 420px) {
+  .social-btn > span { display: none; }
+}
